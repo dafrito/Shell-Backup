@@ -1,0 +1,63 @@
+#!/bin/bash
+PATH=/bin:/usr/bin
+if [ ! "$BACKUP_PATH" ]; then
+	echo "BACKUP_PATH must be defined" 1>&2
+	exit 1
+fi
+source $BACKUP_PATH/library.sh
+source $BACKUP_PATH/load-settings.sh
+
+function load_remote_repo {
+	REMOTES="$BACKUP_ROOT/remotes/$REPO_NAME";
+	if [ ! -e "$REMOTES" ]; then
+		mkdir -p "$BACKUP_ROOT/remotes"
+		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH/* -maxdepth 0 -type d" >$REMOTES
+	fi
+}
+
+REPO_NAME=$1
+[ -n "$REPO_NAME" ] || error "Repository name must be given";
+PROJECT=$2
+[ -n "$PROJECT" ] || error "Project name must be given";
+
+DATA=`grep "^$1 " "$REPOS"` || error "Repository data could not be found: $1"
+push_ifs '	'
+set - $DATA
+pop_ifs
+shift
+REPO_TYPE=$1
+shift
+
+if [ "$REPO_TYPE" = "local" ]; then
+	REPO_PATH=$1
+	if [ ! "$REPO_PATH"]; then
+		error "local repository $REPO_NAME must specify location";
+	fi
+	if [ -d "$REPO_PATH/$PROJECT" ]; then
+		REPO_PATH=$REPO_PATH/$PROJECT
+	elif [ -d "$REPO_PATH/$PROJECT.git" ]; then
+		REPO_PATH=$REPO_PATH/$PROJECT.git
+	else
+		REPO_PATH=$REPO_PATH/$PROJECT.git
+		git init --bare $REPO_PATH || error "git init failed to create repository at $REPO_PATH";
+	fi
+	git push --mirror $REPO_PATH
+elif [ "$REPO_TYPE" = "ssh" ]; then
+	SSH_URL=${1?"URL must be given for $REPO_NAME"};
+	SSH_USERNAME=${2?"username must be given for $REPO_NAME"};
+	REPO_PATH=${3?"remote path must be given for $REPO_NAME"};
+	load_remote_repo
+	if grep -q -F "$REPO_PATH/$PROJECT.git" $REMOTES; then
+		REPO_PATH=$REPO_PATH/$PROJECT.git
+	elif grep -q -F "$REPO_PATH/$PROJECT" $REMOTES; then
+		REPO_PATH=$REPO_PATH/$PROJECT
+	else
+		REPO_PATH=$REPO_PATH/$PROJECT.git
+		ssh -l $SSH_USERNAME $SSH_URL "git init --bare $REPO_PATH"
+	fi
+	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH"
+elif [ ! "$REPO_TYPE" ]; then
+	error "Repository type must be specified for $REPO_NAME";
+else
+	error "Unrecognized repository type for $REPO_NAME: $REPO_TYPE";
+fi
