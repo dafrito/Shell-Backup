@@ -1,10 +1,9 @@
 #!/bin/bash
 PATH=/bin:/usr/bin
-if [ ! "$BACKUP_PATH" ]; then
-	echo "BACKUP_PATH must be defined" 1>&2
-	exit 1
+if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
+	BACKUP_EXECUTABLE_DIR=${0%/*}
 fi
-source $BACKUP_PATH/library.sh
+source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 
 SETTINGS=$HOME/.backup
 if [ ! -e "$SETTINGS" ]; then
