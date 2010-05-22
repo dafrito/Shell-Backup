@@ -10,8 +10,8 @@ if [ ! -e "$SETTINGS" ]; then
 	mkdir "$SETTINGS" || error "$SETTINGS could not be created";
 fi
 
-REPOS=$BACKUP_ROOT/repos
+REPOS=$SETTINGS/repos
 touch $REPOS
 
-PROFILES=$BACKUP_ROOT/profiles
+PROFILES=$SETTINGS/profiles
 mkdir -p $PROFILES
