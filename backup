@@ -16,13 +16,13 @@ mkdir -p $TMP
 cmd=${1-l}
 shift
 case "$cmd" in 
-	e|ed|edit)
+	-e|--edit)
 		if [ -n "$1" ]; then
 			$EDITOR "$PROFILES/$*"
 		else
 			$EDITOR $REPOS
 		fi ;;
-	l|list)
+	-l|--list)
 		for profile in `find $PROFILES -maxdepth 1`; do
 			if [ ! -n "$root" ]; then
 				root=`echo $profile | wc -m`
@@ -30,7 +30,7 @@ case "$cmd" in
 				echo ${profile:$root}
 			fi
 		done  ;;
-	r|run) 
+	*)
 		profile="$*"
 		[ -n "$profile" ] || error "backup: profile must be given"
 		[ -f "$PROFILES/$profile" ] || error "backup: $profile is not a valid profile"
