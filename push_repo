@@ -21,9 +21,7 @@ PROJECT=$2
 [ -n "$PROJECT" ] || error "Project name must be given";
 
 DATA=`grep "^$1 " "$REPOS"` || error "Repository data could not be found: $1"
-push_ifs '	'
-set - $DATA
-pop_ifs
+IFS='	' set - $DATA
 shift
 REPO_TYPE=$1
 shift
