@@ -47,5 +47,6 @@ case "$cmd" in
 		else
 			log "Profile '$profile' failed with error code: $R"
 		fi
+		exit $R
 	;;
 esac;
