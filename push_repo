@@ -9,10 +9,10 @@ source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/git-commands.sh || exit 1
 
 function load_remote_repo {
-	REMOTES="$BACKUP_ROOT/remotes/$REPO_NAME";
+	REMOTES="$TMP/remotes/$REPO_NAME";
 	if [ ! -e "$REMOTES" ]; then
-		mkdir -p "$BACKUP_ROOT/remotes"
-		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH/* -maxdepth 0 -type d" >$REMOTES
+		mkdir -p "$TMP/remotes"
+		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH -maxdepth 1 -type d" >$REMOTES
 	fi
 }
 
