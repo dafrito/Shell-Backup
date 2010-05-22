@@ -65,7 +65,12 @@ elif [ "$REPO_TYPE" = "ssh" ]; then
 		REPO_PATH=$REPO_PATH/$PROJECT
 	else
 		REPO_PATH=$REPO_PATH/$PROJECT.git
-		ssh -l $SSH_USERNAME $SSH_URL "git init --bare $REPO_PATH"
+		log "Creating new repository at '$REPO_PATH'"
+		ssh -l $SSH_USERNAME $SSH_URL "
+			mkdir -p $REPO_PATH
+			cd $REPO_PATH
+			git init --bare
+"
 	fi
 	log "REPO_PATH is '$REPO_PATH'"
 	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH"
