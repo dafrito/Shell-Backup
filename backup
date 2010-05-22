@@ -53,11 +53,11 @@ case "$cmd" in
 		fi
 		[ -n "$profile" ] || error "backup: profile must be given"
 		[ -f "$PROFILES/$profile" ] || error "backup: $profile is not a valid profile"
-		log "Running profile '$profile' ..."
+		log "Running profile '$profile':"
 		PATH=$PATH:$BACKUP_EXECUTABLE_DIR bash "$PROFILES/$profile" 2>&1 | tee -a $LOG 1>&2
 		R=$?
 		if [ "$R" = "0" ]; then
-			log "Profile '$profile' was successful"
+			log "Profile '$profile' was successful."
 		else
 			log "Profile '$profile' failed with error code: $R"
 		fi
