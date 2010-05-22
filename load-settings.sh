@@ -22,8 +22,10 @@ PROFILES=$SETTINGS/profiles
 mkdir -p $PROFILES
 touch $PROFILES/full
 
-TMP=/tmp/backup/
+TMP=/tmp/backup
 # TMP acts as our lock. If it exists, we're either crashing or already backing up.
-[ -e $TMP/lock ] && error "Backup already in progress"
+[ ! -e $TMP/lock ] || error "Backup appears to be in progress; delete $TMP/lock to unlock."
 trap "rm -rf '$TMP'" EXIT
 mkdir -p $TMP
+touch $TMP/lock
+

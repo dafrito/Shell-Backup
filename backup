@@ -15,6 +15,10 @@ case "$cmd" in
 		else
 			$EDITOR $REPOS
 		fi ;;
+	-lock|--lock)
+		echo "All backups are locked; delete $TMP/lock to unlock." 1>&2
+		trap '' EXIT
+		exit ;;
 	--log)
 		cat $LOG
 		exit ;;
