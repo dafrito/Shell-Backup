@@ -32,6 +32,9 @@ case "$cmd" in
 		done  ;;
 	*)
 		profile="$*"
+		if [ ! -n "$profile" ]; then
+			profile=full
+		fi
 		[ -n "$profile" ] || error "backup: profile must be given"
 		[ -f "$PROFILES/$profile" ] || error "backup: $profile is not a valid profile"
 		PATH=$PATH:$BACKUP_EXECUTABLE_DIR bash "$PROFILES/$profile" ;;

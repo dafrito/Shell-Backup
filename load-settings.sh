@@ -15,3 +15,4 @@ touch $REPOS
 
 PROFILES=$SETTINGS/profiles
 mkdir -p $PROFILES
+touch $PROFILES/full
