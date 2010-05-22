@@ -29,8 +29,11 @@ shift
 
 if [ "$REPO_TYPE" = "local" ]; then
 	REPO_PATH=$1
-	if [ ! "$REPO_PATH"]; then
+	if [ ! "$REPO_PATH" ]; then
 		error "local repository $REPO_NAME must specify location";
+	fi
+	if [ ! -e $REPO_PATH ]; then
+		error "local repository $REPO_NAME specifies a non-existent location: $REPO_PATH";
 	fi
 	if [ -d "$REPO_PATH/$PROJECT" ]; then
 		REPO_PATH=$REPO_PATH/$PROJECT
