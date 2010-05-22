@@ -41,19 +41,23 @@ if [ "$REPO_TYPE" = "local" ]; then
 	if [ ! -e $REPO_PATH ]; then
 		error "local repository $REPO_NAME specifies a non-existent location: $REPO_PATH";
 	fi
+	log "Starting push to local repository at '$REPO_PATH'"
 	if [ -d "$REPO_PATH/$PROJECT" ]; then
 		REPO_PATH=$REPO_PATH/$PROJECT
 	elif [ -d "$REPO_PATH/$PROJECT.git" ]; then
 		REPO_PATH=$REPO_PATH/$PROJECT.git
 	else
 		REPO_PATH=$REPO_PATH/$PROJECT.git
+		log "Creating new repository at '$REPO_PATH'"
 		git_init_mirrored "$REPO_PATH" || error "git init failed to create repository at $REPO_PATH";
 	fi
+	log "Pushing new repository at '$REPO_PATH'"
 	git_push_to_mirrored "$REPO_PATH"
 elif [ "$REPO_TYPE" = "ssh" ]; then
 	SSH_URL=${1?"URL must be given for $REPO_NAME"};
 	SSH_USERNAME=${2?"username must be given for $REPO_NAME"};
 	REPO_PATH=${3?"remote path must be given for $REPO_NAME"};
+	log "Starting push to remote repository at '$SSH_URL'"
 	load_remote_repo
 	if grep -q -F "$REPO_PATH/$PROJECT.git" $REMOTES; then
 		REPO_PATH=$REPO_PATH/$PROJECT.git
@@ -63,6 +67,7 @@ elif [ "$REPO_TYPE" = "ssh" ]; then
 		REPO_PATH=$REPO_PATH/$PROJECT.git
 		ssh -l $SSH_USERNAME $SSH_URL "git init --bare $REPO_PATH"
 	fi
+	log "REPO_PATH is '$REPO_PATH'"
 	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH"
 elif [ ! "$REPO_TYPE" ]; then
 	error "Repository type must be specified for $REPO_NAME";
