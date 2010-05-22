@@ -6,19 +6,21 @@ fi
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
-if [ ! "$BACKUP_PID" ]; then
-	# We're the parent backup process, so export ourselves.
-	export BACKUP_PID=$$
-fi
-
-if [ -e $TMP/lock ]; then
-	if [ "$BACKUP_PID" != `cat $TMP/lock` ]; then
-		error "Backup process at `cat $TMP/lock` appears to be running; delete $TMP/lock to unlock."
+function check_and_lock {
+	if [ ! "$BACKUP_PID" ]; then
+		# We're the parent backup process, so export ourselves.
+		export BACKUP_PID=$$
 	fi
-else
-	echo $BACKUP_PID >$TMP/lock
-	trap "rm -rf '$TMP'" EXIT
-fi
+
+	if [ -e $TMP/lock ]; then
+		if [ "$BACKUP_PID" != `cat $TMP/lock` ]; then
+			error "Backup process at `cat $TMP/lock` appears to be running; delete $TMP/lock to unlock."
+		fi
+	else
+		echo $BACKUP_PID >$TMP/lock
+		trap "rm -rf '$TMP'" EXIT
+	fi
+}
 
 cmd=$1
 case "$cmd" in 
@@ -46,6 +48,7 @@ case "$cmd" in
 			fi
 		done  ;;
 	*)
+		check_and_lock
 		shift
 		profile="$*"
 		if [ ! -n "$profile" ]; then
