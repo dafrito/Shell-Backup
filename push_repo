@@ -27,8 +27,8 @@ else
 fi
 [ -n "$PROJECT" ] || error "Project name must be given";
 
-DATA=`grep "^$1 " "$REPOS"` || error "Repository data could not be found: $1"
-IFS='	' set - $DATA
+DATA=`grep "^$REPO_NAME	" "$REPOS"` || error "Repository data could not be found: $REPO_NAME"
+set - $DATA
 shift
 REPO_TYPE=$1
 shift
