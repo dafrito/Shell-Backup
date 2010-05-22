@@ -6,23 +6,20 @@ fi
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
-TMP=/tmp/backup/
-
-# TMP acts as our lock. If it exists, we're either crashing or already backing up.
-[ -e $TMP/lock ] && error "Backup already in progress"
-trap "rm -rf '$TMP'" EXIT
-mkdir -p $TMP
-
-cmd=${1-l}
-shift
+cmd=$1
 case "$cmd" in 
 	-e|--edit)
+		shift
 		if [ -n "$1" ]; then
 			$EDITOR "$PROFILES/$*"
 		else
 			$EDITOR $REPOS
 		fi ;;
+	--log)
+		cat $LOG
+		exit ;;
 	-l|--list)
+		shift
 		for profile in `find $PROFILES -maxdepth 1`; do
 			if [ ! -n "$root" ]; then
 				root=`echo $profile | wc -m`
@@ -31,11 +28,20 @@ case "$cmd" in
 			fi
 		done  ;;
 	*)
+		shift
 		profile="$*"
 		if [ ! -n "$profile" ]; then
 			profile=full
 		fi
 		[ -n "$profile" ] || error "backup: profile must be given"
 		[ -f "$PROFILES/$profile" ] || error "backup: $profile is not a valid profile"
-		PATH=$PATH:$BACKUP_EXECUTABLE_DIR bash "$PROFILES/$profile" ;;
+		log "Running profile '$profile' ..."
+		PATH=$PATH:$BACKUP_EXECUTABLE_DIR bash "$PROFILES/$profile" >>$LOG 2>&1
+		R=$?
+		if [ "$R" = "0" ]; then
+			log "Profile '$profile' was successful"
+		else
+			log "Profile '$profile' failed with error code: $R"
+		fi
+	;;
 esac;
