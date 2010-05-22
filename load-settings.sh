@@ -24,4 +24,3 @@ touch $PROFILES/full
 
 TMP=/tmp/backup
 mkdir -p $TMP
-
