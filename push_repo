@@ -18,7 +18,13 @@ function load_remote_repo {
 
 REPO_NAME=$1
 [ -n "$REPO_NAME" ] || error "Repository name must be given";
-PROJECT=$2
+shift
+if [ -n "$1" ]; then
+	PROJECT=$1
+else
+	PROJECT=`pwd`
+	PROJECT=${PROJECT##*/}
+fi
 [ -n "$PROJECT" ] || error "Project name must be given";
 
 DATA=`grep "^$1 " "$REPOS"` || error "Repository data could not be found: $1"
