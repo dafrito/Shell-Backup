@@ -1,5 +1,6 @@
 function log {
 	echo "`date +'%F %T'` $*" >>$LOG
+	echo $*
 }
 
 function error {
