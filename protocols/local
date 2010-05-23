@@ -1,3 +1,9 @@
+#!/bin/bash
+
+function git_load_settings {
+	REPO_PATH=$1
+}
+
 function git_push_to_mirrored {
 	git push --mirror "$*" 2>&1
 }
