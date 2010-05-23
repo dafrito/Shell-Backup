@@ -38,10 +38,10 @@ elif [ ! -f "$BACKUP_EXECUTABLE_DIR/protocols/$REPO_TYPE" ]; then
 fi
 source $BACKUP_EXECUTABLE_DIR/protocols/$REPO_TYPE || error "protocol failed to load: $REPO_TYPE"
 log "Loaded protocol: $REPO_TYPE"
+protocol_load_settings $* || error "settings for repository $REPO_NAME failed to load";
 if [ "$DRY_RUN" ]; then
 	source $BACKUP_EXECUTABLE_DIR/protocols/dry
 fi
-protocol_load_settings $* || error "settings for repository $REPO_NAME failed to load";
 if [ ! "$REPO_PATH" ]; then
 	error "repository $REPO_NAME must specify location";
 fi
