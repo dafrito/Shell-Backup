@@ -6,14 +6,6 @@ fi
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
-function load_remote_repo {
-	REMOTES="$TMP/remotes/$REPO_NAME";
-	if [ ! -e "$REMOTES" ]; then
-		mkdir -p "$TMP/remotes"
-		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH -maxdepth 1 -type d" >$REMOTES
-	fi
-}
-
 REPO_NAME=$1
 [ -n "$REPO_NAME" ] || error "Repository name must be given";
 shift

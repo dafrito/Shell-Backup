@@ -1,5 +1,13 @@
 #!/bin/bash
 
+function load_remote_repo {
+	REMOTES="$TMP/remotes/$REPO_NAME";
+	if [ ! -e "$REMOTES" ]; then
+		mkdir -p "$TMP/remotes"
+		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH -maxdepth 1 -type d" >$REMOTES
+	fi
+}
+
 function protocol_load_settings {
 	SSH_URL=${1?"URL must be given for $REPO_NAME"};
 	SSH_USERNAME=${2?"username must be given for $REPO_NAME"};
