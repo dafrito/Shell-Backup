@@ -16,19 +16,12 @@ PROJECT=${PROJECT##*/}
 DATA=`grep "^$REPO_NAME	" "$REPOS"` || error "Repository data could not be found: $REPO_NAME"
 set - $DATA
 shift
-REPO_TYPE=$1
+load_protocol $1
 shift
 
-if [ ! "$REPO_TYPE" ]; then
-	error "Repository type must be specified for $REPO_NAME";
-elif [ ! -f "$PROTOCOLS/$REPO_TYPE" ]; then
-	error "Unrecognized repository type for $REPO_NAME: $REPO_TYPE";
-fi
-source $PROTOCOLS/$REPO_TYPE || error "protocol failed to load: $REPO_TYPE"
-log "Loaded protocol: $REPO_TYPE"
 protocol_load_settings $* || error "settings for repository $REPO_NAME failed to load";
 if [ "$DRY_RUN" ]; then
-	source $PROTOCOLS/dry
+	load_protocol dry
 fi
 if [ ! "$REPO_PATH" ]; then
 	error "repository $REPO_NAME must specify location";
