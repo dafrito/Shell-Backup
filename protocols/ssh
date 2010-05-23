@@ -4,10 +4,10 @@ function protocol_load_settings {
 	SSH_URL=${1?"URL must be given for $REPO_NAME"};
 	SSH_USERNAME=${2?"username must be given for $REPO_NAME"};
 	REPO_PATH=${3?"remote path must be given for $REPO_NAME"};
+	load_remote_repo
 }
 
 function protocol_repo_exists {
-	load_remote_repo
 	grep -q -F "$*" $REMOTES
 }
 
