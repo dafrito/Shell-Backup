@@ -25,6 +25,10 @@ function check_and_lock {
 function parse_command {
 	cmd=$1
 	case "$cmd" in 
+		-n|--dry-run)
+			shift
+			DRY_RUN=true
+			parse_command $*;;
 		-v|--verbose)
 			shift
 			VERBOSE=true
