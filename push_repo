@@ -6,8 +6,6 @@ fi
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
-source $BACKUP_EXECUTABLE_DIR/git-commands.sh || exit 1
-
 function load_remote_repo {
 	REMOTES="$TMP/remotes/$REPO_NAME";
 	if [ ! -e "$REMOTES" ]; then
