@@ -58,4 +58,3 @@ else
 fi
 log "Now pushing to '$REPO_PATH'"
 protocol_push_repo 2>&1 || error "failed to push to repository at $REPO_PATH";
-exit $?
