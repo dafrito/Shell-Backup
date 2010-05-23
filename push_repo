@@ -21,14 +21,14 @@ shift
 
 if [ ! "$REPO_TYPE" ]; then
 	error "Repository type must be specified for $REPO_NAME";
-elif [ ! -f "$BACKUP_EXECUTABLE_DIR/protocols/$REPO_TYPE" ]; then
+elif [ ! -f "$PROTOCOLS/$REPO_TYPE" ]; then
 	error "Unrecognized repository type for $REPO_NAME: $REPO_TYPE";
 fi
-source $BACKUP_EXECUTABLE_DIR/protocols/$REPO_TYPE || error "protocol failed to load: $REPO_TYPE"
+source $PROTOCOLS/$REPO_TYPE || error "protocol failed to load: $REPO_TYPE"
 log "Loaded protocol: $REPO_TYPE"
 protocol_load_settings $* || error "settings for repository $REPO_NAME failed to load";
 if [ "$DRY_RUN" ]; then
-	source $BACKUP_EXECUTABLE_DIR/protocols/dry
+	source $PROTOCOLS/dry
 fi
 if [ ! "$REPO_PATH" ]; then
 	error "repository $REPO_NAME must specify location";
