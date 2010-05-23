@@ -1,13 +1,18 @@
 #!/bin/bash
 
-function git_load_settings {
-	REPO_PATH=$1
+function protocol_load_settings {
+	REPO_PATH=$1;
 }
 
-function git_push_to_mirrored {
+function protocol_repo_exists {
+	[ -d "$*" ];
+}
+
+function protocol_init_repo {
+	git init --bare "$*" 2>&1
+}
+
+function protocol_push_repo {
 	git push --mirror "$*" 2>&1
 }
 
-function git_init_mirrored {
-	git init --bare "$*" 2>&1
-}
