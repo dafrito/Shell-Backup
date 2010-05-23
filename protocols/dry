@@ -1,8 +1,11 @@
-function git_push_to_mirrored {
-	echo "pushing to: $*"
+#!/bin/bash
+
+# Note that protocol_load_settings is intentionally omitted
+
+function protocol_init_repo {
+	echo "git init --bare `readlink  -m $REPO_PATH`"
 }
 
-function git_init_mirrored {
-	readlink  -m $*
-	echo "init: $*"
+function protocol_push_repo {
+	echo "git push --mirror $REPO_PATH"
 }
