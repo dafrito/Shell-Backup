@@ -1,6 +1,6 @@
 function log {
 	echo "`date +'%F %T'` $*" >>$LOG
-	echo $*
+	[ "$VERBOSE" ] && echo $*
 }
 
 function error {
