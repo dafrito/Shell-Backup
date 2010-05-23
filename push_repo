@@ -51,8 +51,10 @@ if [ "$REPO_TYPE" = "local" ]; then
 		log "Creating new repository at '$REPO_PATH'"
 		git_init_mirrored "$REPO_PATH" || error "git init failed to create repository at $REPO_PATH";
 	fi
-	log "Pushing new repository at '$REPO_PATH'"
-	git_push_to_mirrored "$REPO_PATH"
+	log "Now pushing to '$REPO_PATH'"
+	set -o pipefail
+	git_push_to_mirrored "$REPO_PATH" || error "Failed to push to local repository at $REPO_PATH";
+	exit $?
 elif [ "$REPO_TYPE" = "ssh" ]; then
 	SSH_URL=${1?"URL must be given for $REPO_NAME"};
 	SSH_USERNAME=${2?"username must be given for $REPO_NAME"};
@@ -70,10 +72,12 @@ elif [ "$REPO_TYPE" = "ssh" ]; then
 			mkdir -p $REPO_PATH
 			cd $REPO_PATH
 			git init --bare
-"
+		" || error "Failed to create new repository for $REPO_NAME"
 	fi
-	log "REPO_PATH is '$REPO_PATH'"
-	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH"
+	log "Now pushing to '$REPO_PATH'"
+	set -o pipefail
+	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH" 2>&1 | tee -a $LOG
+	exit $?
 elif [ ! "$REPO_TYPE" ]; then
 	error "Repository type must be specified for $REPO_NAME";
 else
