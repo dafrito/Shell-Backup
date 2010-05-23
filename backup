@@ -58,6 +58,11 @@ function parse_command {
 			done  ;;
 		*)
 			check_and_lock
+			cat >$TMP/sesion <<EOF
+BACKUP_PID=$BACKUP_PID
+DRY_RUN=$DRY_RUN
+VERBOSE=$VERBOSE
+EOF
 			profile="$*"
 			if [ ! -n "$profile" ]; then
 				profile=full
