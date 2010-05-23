@@ -22,48 +22,61 @@ function check_and_lock {
 	fi
 }
 
-cmd=$1
-case "$cmd" in 
-	-e|--edit)
-		shift
-		if [ -n "$1" ]; then
-			$EDITOR "$PROFILES/$*"
-		else
-			$EDITOR $REPOS
-		fi ;;
-	-lock|--lock)
-		echo "All backups are locked; delete $TMP/lock to unlock." 1>&2
-		trap '' EXIT
-		exit ;;
-	--log)
-		cat $LOG
-		exit ;;
-	-l|--list)
-		shift
-		for profile in `find $PROFILES -maxdepth 1`; do
-			if [ ! -n "$root" ]; then
-				root=`echo $profile | wc -m`
+function parse_command {
+	cmd=$1
+	case "$cmd" in 
+		-v|--verbose)
+			shift
+			VERBOSE=true
+			parse_command $*;;
+		-e|--edit)
+			shift
+			if [ -n "$1" ]; then
+				$EDITOR "$PROFILES/$*"
 			else
-				echo ${profile:$root}
+				$EDITOR $REPOS
+			fi ;;
+		-lock|--lock)
+			echo "All backups are locked; delete $TMP/lock to unlock." 1>&2
+			trap '' EXIT
+			exit ;;
+		--log)
+			cat $LOG
+			exit ;;
+		-l|--list)
+			shift
+			for profile in `find $PROFILES -maxdepth 1`; do
+				if [ ! -n "$root" ]; then
+					root=`echo $profile | wc -m`
+				else
+					echo ${profile:$root}
+				fi
+			done  ;;
+		*)
+			check_and_lock
+			profile="$*"
+			if [ ! -n "$profile" ]; then
+				profile=full
 			fi
-		done  ;;
-	*)
-		check_and_lock
-		shift
-		profile="$*"
-		if [ ! -n "$profile" ]; then
-			profile=full
-		fi
-		[ -n "$profile" ] || error "backup: profile must be given"
-		[ -f "$PROFILES/$profile" ] || error "backup: $profile is not a valid profile"
-		log "Running profile '$profile':"
-		PATH=$PATH:$BACKUP_EXECUTABLE_DIR bash "$PROFILES/$profile" 2>&1 | tee -a $LOG 1>&2
-		R=$?
-		if [ "$R" = "0" ]; then
-			log "Profile '$profile' was successful."
-		else
-			log "Profile '$profile' failed with error code: $R"
-		fi
-		exit $R
-	;;
-esac;
+			[ -n "$profile" ] || error "backup: profile must be given"
+			[ -f "$PROFILES/$profile" ] || error "backup: $profile is not a valid profile"
+			log "Running profile '$profile'"
+			PATH=$PATH:$BACKUP_EXECUTABLE_DIR 
+			set -o pipefail
+			if [ "$VERBOSE" ]; then
+				bash "$PROFILES/$profile" 2>&1 | tee -a $LOG 1>&2 
+				R=$?
+			else
+				bash "$PROFILES/$profile" 2>&1 1>>$LOG | tee -a $LOG 1>&2 
+				R=$?
+			fi
+			if [ "$R" = "0" ]; then
+				log "Profile '$profile' was successful."
+			else
+				log "Profile '$profile' failed with error code: $R"
+			fi
+			exit $R
+		;;
+	esac;
+}
+parse_command $*
