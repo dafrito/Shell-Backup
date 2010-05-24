@@ -30,6 +30,7 @@ function parse_command {
 		-n|--dry-run)
 			shift
 			DRY_RUN=true
+			VERBOSE=true
 			parse_command $*;;
 		-v|--verbose)
 			shift
