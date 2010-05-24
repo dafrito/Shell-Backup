@@ -8,15 +8,16 @@ source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 log "Time of start: `date`"
 PROFILE=${1-full}
 shift
-[ -f "$PROFILES/$PROFILE" ] || error "backup: $PROFILE is not a valid profile"
+cd $PROFILES
+[ -f "$PROFILE" ] || error "backup: $PROFILE is not a valid profile"
 log "Running profile '$PROFILE'"
 set -o pipefail
 PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
 if [ "$VERBOSE" ]; then
-	source "$PROFILES/$PROFILE" $*
+	source "$PROFILE" $*
 	R=$?
 else
-	source "$PROFILES/$PROFILE" $* 2>&1 1>>$LOG | tee -a $LOG 1>&2 
+	source "$PROFILE" $* 2>&1 1>>$LOG | tee -a $LOG 1>&2 
 	R=$?
 fi
 if [ "$R" = "0" ]; then
