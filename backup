@@ -58,6 +58,7 @@ function parse_command {
 			done  ;;
 		*)
 			check_and_lock
+			log "Time of start: `date`"
 			cat >$TMP/session <<EOF
 BACKUP_PID=$BACKUP_PID
 DRY_RUN=$DRY_RUN
@@ -84,6 +85,7 @@ EOF
 			else
 				log "Profile '$profile' failed with error code: $R"
 			fi
+			log "Time of completion: `date`"
 			exit $R
 		;;
 	esac;
