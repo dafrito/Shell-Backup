@@ -1,9 +1,9 @@
 #!/bin/bash
 
 function load_remote_repo {
-	if [ "$BACKUP_PID" ]; then
-		REMOTES="$TMP/remotes/$REPO_NAME";
-		mkdir -p "$TMP/remotes"
+	if [ "$SESSION" ]; then
+		REMOTES="$SESSION/remotes/$REPO_NAME";
+		mkdir -p "$SESSION/remotes"
 	else
 		REMOTES=/tmp/backup-ssh-remotes.$$/
 		mkdir -p $REMOTES

@@ -23,10 +23,3 @@ touch $REPOS
 PROFILES=$SETTINGS/profiles
 mkdir -p $PROFILES
 touch $PROFILES/full
-
-TMP=/tmp/backup
-mkdir -p $TMP
-
-# Settings for current run.
-touch $TMP/session
-source $TMP/session

@@ -12,13 +12,17 @@ function check_and_lock {
 		export BACKUP_PID=$$
 	fi
 
-	if [ -e $TMP/lock ]; then
-		if [ "$BACKUP_PID" != `cat $TMP/lock` ]; then
-			error "Backup process at `cat $TMP/lock` appears to be running; delete $TMP/lock to unlock."
+	SESSION=/tmp/backup
+	if [ -e $SESSION/lock ]; then
+		if [ "$BACKUP_PID" != `cat $SESSION/lock` ]; then
+			error "Backup process at `cat $SESSION/lock` appears to be running; delete $SESSION/lock to unlock."
 		fi
+		source $SESSION/settings
 	else
-		echo $BACKUP_PID >$TMP/lock
-		trap "rm -rf '$TMP'" EXIT
+		mkdir -p $SESSION
+		echo $BACKUP_PID >$SESSION/lock
+		trap "rm -rf '$SESSION'" EXIT
+		touch $SESSION/settings
 	fi
 }
 
@@ -41,7 +45,7 @@ function parse_command {
 				$EDITOR $REPOS
 			fi ;;
 		-lock|--lock)
-			echo "All backups are locked; delete $TMP/lock to unlock." 1>&2
+			echo "All backups are locked; delete $SESSION/lock to unlock." 1>&2
 			trap '' EXIT
 			exit ;;
 		--log)
@@ -59,7 +63,7 @@ function parse_command {
 		*)
 			check_and_lock
 			log "Time of start: `date`"
-			cat >$TMP/session <<EOF
+			cat >$SESSION/settings <<EOF
 DRY_RUN=$DRY_RUN
 VERBOSE=$VERBOSE
 EOF
