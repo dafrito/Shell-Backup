@@ -7,7 +7,7 @@ function load_remote_repo {
 	else
 		REMOTES=/tmp/backup-ssh-remotes.$$/
 		mkdir -p $REMOTES
-		trap 'rm -f $REMOTES' EXIT
+		trap 'rm -rf "$REMOTES"' EXIT
 		REMOTES=$REMOTES/$REPO_NAME
 	fi
 	if [ ! -e "$REMOTES" ]; then
