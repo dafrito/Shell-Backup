@@ -2,15 +2,15 @@
 
 function load_remote_repo {
 	if [ "$SESSION" ]; then
-		REMOTES="$SESSION/remotes/$REPO_NAME";
-		mkdir -p "$SESSION/remotes"
+		REMOTES_DIR="$SESSION_DIR/remotes";
 	else
-		REMOTES=/tmp/backup-ssh-remotes.$$/
-		mkdir -p $REMOTES
-		trap 'rm -rf "$REMOTES"' EXIT
-		REMOTES=$REMOTES/$REPO_NAME
+		REMOTES_DIR=/tmp/backup-ssh-remotes.$$/
+		trap 'rm -rf "$REMOTES_DIR"' EXIT
 	fi
-	if [ ! -e "$REMOTES" ]; then
+	mkdir -p $REMOTES_DIR
+	REMOTES=$REMOTES_DIR/$REPO_NAME
+	if [ ! -e "$REMOTES" ] || [ "$REPO_PATH" != "`cat $REMOTES.path`"; then
+		echo "$REPO_PATH" >"$REMOTES.path"
 		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH -maxdepth 1 -type d" >$REMOTES
 	fi
 }
