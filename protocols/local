@@ -5,17 +5,17 @@ function protocol_load_settings {
 }
 
 function protocol_repo_exists {
-	[ -d "$*" ];
+	[ -d "$REPO_PATH/$*" ];
 }
 
 function protocol_canonicalize {
-	readlink -m $*
+	readlink -m $REPO_PATH/$*
 }
 
 function protocol_init_repo {
-	git init --bare "$REPO_PATH"
+	git init --bare `protocol_canonicalize "$*"`
 }
 
 function protocol_push_repo {
-	git push --mirror "$REPO_PATH"
+	git push --mirror `protocol_canonicalize "$*"`
 }
