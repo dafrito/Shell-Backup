@@ -21,7 +21,8 @@ function load_protocol {
 
 function load_repo {
 	local name=$1
-	local data=`grep "^$name" "$REPOS"` || error "Repository data could not be found: $name"
+	local data=`grep "^$name" "$REPOS"`
+	[ -n "$data" ] || error "Repository data could not be found: $name" 
 	set - $data
 	shift
 	load_protocol $1
