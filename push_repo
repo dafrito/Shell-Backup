@@ -7,9 +7,8 @@ source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 REPO_NAME=$1
 [ -n "$REPO_NAME" ] || error "Repository name must be given";
 shift
-PROJECT=${1-`pwd`}
+PROJECT=`pwd`
 PROJECT=${PROJECT##*/}
-[ -n "$PROJECT" ] || error "Project name must be given";
 
 DATA=`grep "^$REPO_NAME	" "$REPOS"` || error "Repository data could not be found: $REPO_NAME"
 set - $DATA
