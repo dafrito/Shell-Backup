@@ -1,0 +1,27 @@
+#!/bin/bash
+PATH=/bin:/usr/bin
+[ -d "$BACKUP_EXECUTABLE_DIR" ] || BACKUP_EXECUTABLE_DIR=${0%/*}
+
+source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
+source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
+
+log "Time of start: `date`"
+PROFILE=${*-full}
+[ -f "$PROFILES/$PROFILE" ] || error "backup: $PROFILE is not a valid profile"
+log "Running profile '$PROFILE'"
+set -o pipefail
+PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
+if [ "$VERBOSE" ]; then
+	source "$PROFILES/$PROFILE"
+	R=$?
+else
+	source "$PROFILES/$PROFILE" 2>&1 1>>$LOG | tee -a $LOG 1>&2 
+	R=$?
+fi
+if [ "$R" = "0" ]; then
+	log "Profile '$PROFILE' was successful."
+else
+	log "Profile '$PROFILE' failed with error code: $R"
+fi
+log "Time of completion: `date`"
+exit $R

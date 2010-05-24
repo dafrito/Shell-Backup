@@ -60,31 +60,8 @@ function parse_command {
 			done  ;;
 		*)
 			check_and_lock
-			log "Time of start: `date`"
-			profile="$*"
-			if [ ! -n "$profile" ]; then
-				profile=full
-			fi
-			[ -n "$profile" ] || error "backup: profile must be given"
-			[ -f "$PROFILES/$profile" ] || error "backup: $profile is not a valid profile"
-			log "Running profile '$profile'"
-			PATH=$PATH:$BACKUP_EXECUTABLE_DIR 
-			set -o pipefail
-			if [ "$VERBOSE" ]; then
-				bash "$PROFILES/$profile"
-				R=$?
-			else
-				bash "$PROFILES/$profile" 2>&1 1>>$LOG | tee -a $LOG 1>&2 
-				R=$?
-			fi
-			if [ "$R" = "0" ]; then
-				log "Profile '$profile' was successful."
-			else
-				log "Profile '$profile' failed with error code: $R"
-			fi
-			log "Time of completion: `date`"
-			exit $R
-		;;
+			$BACKUP_EXECUTABLE_DIR/run_profile $*
+			;;
 	esac;
 }
 parse_command $*
