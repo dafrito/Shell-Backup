@@ -60,7 +60,6 @@ function parse_command {
 			check_and_lock
 			log "Time of start: `date`"
 			cat >$TMP/session <<EOF
-BACKUP_PID=$BACKUP_PID
 DRY_RUN=$DRY_RUN
 VERBOSE=$VERBOSE
 EOF
