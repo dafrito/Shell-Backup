@@ -15,10 +15,6 @@ function protocol_load_settings {
 	load_remote_repo
 }
 
-function protocol_canonicalize_path {
-	REPO_PATH="$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH"
-}
-
 function protocol_repo_exists {
 	grep -q -F "$*" $REMOTES
 }
@@ -31,5 +27,5 @@ function protocol_init_repo {
 }
 
 function protocol_push_repo {
-	git push --mirror "$REPO_PATH"
+	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH"
 }
