@@ -74,7 +74,7 @@ EOF
 			PATH=$PATH:$BACKUP_EXECUTABLE_DIR 
 			set -o pipefail
 			if [ "$VERBOSE" ]; then
-				bash "$PROFILES/$profile" 2>&1 | tee -a $LOG 1>&2 
+				bash "$PROFILES/$profile"
 				R=$?
 			else
 				bash "$PROFILES/$profile" 2>&1 1>>$LOG | tee -a $LOG 1>&2 
