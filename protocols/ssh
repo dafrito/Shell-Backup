@@ -1,9 +1,16 @@
 #!/bin/bash
 
 function load_remote_repo {
-	REMOTES="$TMP/remotes/$REPO_NAME";
-	if [ ! -e "$REMOTES" ]; then
+	if [ "$BACKUP_PID" ]; then
+		REMOTES="$TMP/remotes/$REPO_NAME";
 		mkdir -p "$TMP/remotes"
+	else
+		REMOTES=/tmp/backup-ssh-remotes.$$/
+		mkdir -p $REMOTES
+		trap 'rm -f $REMOTES' EXIT
+		REMOTES=$REMOTES/$REPO_NAME
+	fi
+	if [ ! -e "$REMOTES" ]; then
 		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH -maxdepth 1 -type d" >$REMOTES
 	fi
 }
