@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Note that some functions are intentionally omitted
-
 function protocol_init_repo {
 	echo "git init to `protocol_canonicalize $*`"
 }
