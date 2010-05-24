@@ -1,0 +1,31 @@
+#!/bin/bash
+
+function load_remote_repo {
+	REMOTES="$TMP/remotes/$REPO_NAME";
+	if [ ! -e "$REMOTES" ]; then
+		mkdir -p "$TMP/remotes"
+		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH -maxdepth 1 -type d" >$REMOTES
+	fi
+}
+
+function protocol_load_settings {
+	SSH_URL=${1?"URL must be given for $REPO_NAME"};
+	SSH_USERNAME=${2?"username must be given for $REPO_NAME"};
+	REPO_PATH=${3?"remote path must be given for $REPO_NAME"};
+	load_remote_repo
+}
+
+function protocol_repo_exists {
+	grep -q -F "$*" $REMOTES
+}
+
+function protocol_init_repo {
+	ssh -l $SSH_USERNAME $SSH_URL "
+		mkdir -p $REPO_PATH
+		cd $REPO_PATH
+		git init --bare"
+}
+
+function protocol_push_repo {
+	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH"
+}

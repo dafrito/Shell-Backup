@@ -1,85 +1,35 @@
 #!/bin/bash
 PATH=/bin:/usr/bin
-if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
-	BACKUP_EXECUTABLE_DIR=${0%/*}
-fi
+[ -d "$BACKUP_EXECUTABLE_DIR" ] || BACKUP_EXECUTABLE_DIR=${0%/*}
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
-
-source $BACKUP_EXECUTABLE_DIR/git-commands.sh || exit 1
-
-function load_remote_repo {
-	REMOTES="$TMP/remotes/$REPO_NAME";
-	if [ ! -e "$REMOTES" ]; then
-		mkdir -p "$TMP/remotes"
-		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH -maxdepth 1 -type d" >$REMOTES
-	fi
-}
 
 REPO_NAME=$1
 [ -n "$REPO_NAME" ] || error "Repository name must be given";
 shift
-if [ -n "$1" ]; then
-	PROJECT=$1
-else
-	PROJECT=`pwd`
-	PROJECT=${PROJECT##*/}
-fi
+PROJECT=${1-`pwd`}
+PROJECT=${PROJECT##*/}
 [ -n "$PROJECT" ] || error "Project name must be given";
 
 DATA=`grep "^$REPO_NAME	" "$REPOS"` || error "Repository data could not be found: $REPO_NAME"
 set - $DATA
 shift
-REPO_TYPE=$1
+load_protocol $1
 shift
 
-if [ "$REPO_TYPE" = "local" ]; then
-	REPO_PATH=$1
-	if [ ! "$REPO_PATH" ]; then
-		error "local repository $REPO_NAME must specify location";
-	fi
-	if [ ! -e $REPO_PATH ]; then
-		error "local repository $REPO_NAME specifies a non-existent location: $REPO_PATH";
-	fi
-	log "Starting push to local repository at '$REPO_PATH'"
-	if [ -d "$REPO_PATH/$PROJECT" ]; then
-		REPO_PATH=$REPO_PATH/$PROJECT
-	elif [ -d "$REPO_PATH/$PROJECT.git" ]; then
-		REPO_PATH=$REPO_PATH/$PROJECT.git
-	else
-		REPO_PATH=$REPO_PATH/$PROJECT.git
-		log "Creating new repository at '$REPO_PATH'"
-		git_init_mirrored "$REPO_PATH" || error "git init failed to create repository at $REPO_PATH";
-	fi
-	log "Now pushing to '$REPO_PATH'"
-	set -o pipefail
-	git_push_to_mirrored "$REPO_PATH" || error "Failed to push to local repository at $REPO_PATH";
-	exit $?
-elif [ "$REPO_TYPE" = "ssh" ]; then
-	SSH_URL=${1?"URL must be given for $REPO_NAME"};
-	SSH_USERNAME=${2?"username must be given for $REPO_NAME"};
-	REPO_PATH=${3?"remote path must be given for $REPO_NAME"};
-	log "Starting push to remote repository at '$SSH_URL'"
-	load_remote_repo
-	if grep -q -F "$REPO_PATH/$PROJECT.git" $REMOTES; then
-		REPO_PATH=$REPO_PATH/$PROJECT.git
-	elif grep -q -F "$REPO_PATH/$PROJECT" $REMOTES; then
-		REPO_PATH=$REPO_PATH/$PROJECT
-	else
-		REPO_PATH=$REPO_PATH/$PROJECT.git
-		log "Creating new repository at '$REPO_PATH'"
-		ssh -l $SSH_USERNAME $SSH_URL "
-			mkdir -p $REPO_PATH
-			cd $REPO_PATH
-			git init --bare
-		" || error "Failed to create new repository for $REPO_NAME"
-	fi
-	log "Now pushing to '$REPO_PATH'"
-	set -o pipefail
-	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH" 2>&1 | tee -a $LOG
-	exit $?
-elif [ ! "$REPO_TYPE" ]; then
-	error "Repository type must be specified for $REPO_NAME";
+protocol_load_settings $* || error "settings for repository $REPO_NAME failed to load";
+[ "$DRY_RUN" ] && load_protocol dry
+[ "$REPO_PATH" ] || error "repository $REPO_NAME must specify location";
+log "Starting push to repository at '$REPO_PATH'"
+set -o pipefail
+if protocol_repo_exists "$REPO_PATH/$PROJECT"; then
+	REPO_PATH=$REPO_PATH/$PROJECT
+elif protocol_repo_exists "$REPO_PATH/$PROJECT.git"; then
+	REPO_PATH=$REPO_PATH/$PROJECT.git
 else
-	error "Unrecognized repository type for $REPO_NAME: $REPO_TYPE";
+	REPO_PATH=$REPO_PATH/$PROJECT.git
+	log "Creating new repository at '$REPO_PATH'"
+	protocol_init_repo 2>&1 || error "failed to create repository at $REPO_PATH";
 fi
+log "Now pushing to '$REPO_PATH'"
+protocol_push_repo 2>&1 || error "failed to push to repository at $REPO_PATH";

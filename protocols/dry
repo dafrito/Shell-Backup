@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Note that protocol_load_settings is intentionally omitted
+
+function protocol_init_repo {
+	echo "git init to '$REPO_PATH'"
+}
+
+function protocol_push_repo {
+	echo "git push to '$REPO_PATH'"
+}

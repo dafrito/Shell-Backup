@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function protocol_load_settings {
+	REPO_PATH=$1;
+}
+
+function protocol_repo_exists {
+	[ -d "$*" ];
+}
+
+function protocol_init_repo {
+	git init --bare "$REPO_PATH"
+}
+
+function protocol_push_repo {
+	git push --mirror "$REPO_PATH"
+}
+

@@ -25,6 +25,10 @@ function check_and_lock {
 function parse_command {
 	cmd=$1
 	case "$cmd" in 
+		-n|--dry-run)
+			shift
+			DRY_RUN=true
+			parse_command $*;;
 		-v|--verbose)
 			shift
 			VERBOSE=true
@@ -54,6 +58,12 @@ function parse_command {
 			done  ;;
 		*)
 			check_and_lock
+			log "Time of start: `date`"
+			cat >$TMP/session <<EOF
+BACKUP_PID=$BACKUP_PID
+DRY_RUN=$DRY_RUN
+VERBOSE=$VERBOSE
+EOF
 			profile="$*"
 			if [ ! -n "$profile" ]; then
 				profile=full
@@ -64,7 +74,7 @@ function parse_command {
 			PATH=$PATH:$BACKUP_EXECUTABLE_DIR 
 			set -o pipefail
 			if [ "$VERBOSE" ]; then
-				bash "$PROFILES/$profile" 2>&1 | tee -a $LOG 1>&2 
+				bash "$PROFILES/$profile"
 				R=$?
 			else
 				bash "$PROFILES/$profile" 2>&1 1>>$LOG | tee -a $LOG 1>&2 
@@ -75,6 +85,7 @@ function parse_command {
 			else
 				log "Profile '$profile' failed with error code: $R"
 			fi
+			log "Time of completion: `date`"
 			exit $R
 		;;
 	esac;
