@@ -5,7 +5,8 @@ function protocol_load_settings {
 }
 
 function protocol_repo_exists {
-	[ -d "$REPO_PATH/$*" ];
+	local path=`protocol_canonicalize "$*"`
+	[ -d "$path" ];
 }
 
 function protocol_canonicalize {

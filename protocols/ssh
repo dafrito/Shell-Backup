@@ -23,7 +23,7 @@ function protocol_load_settings {
 
 function protocol_repo_exists {
 	load_remote_repo
-	grep -q -F "$REPO_PATH/$*" $REMOTES
+	grep -q -F "`protocol_canonicalize $*`" $REMOTES
 }
 
 function protocol_init_repo {
