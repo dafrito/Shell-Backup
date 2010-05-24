@@ -9,10 +9,10 @@ function protocol_repo_exists {
 }
 
 function protocol_init_repo {
-	git init --bare "$REPO_PATH" 2>&1
+	git init --bare "$REPO_PATH"
 }
 
 function protocol_push_repo {
-	git push --mirror "$REPO_PATH" 2>&1
+	git push --mirror "$REPO_PATH"
 }
 
