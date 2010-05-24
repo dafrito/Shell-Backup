@@ -31,5 +31,6 @@ else
 	log "Creating new repository at '$REPO_PATH'"
 	protocol_init_repo 2>&1 || error "failed to create repository at $REPO_PATH";
 fi
-log "Now pushing to '$REPO_PATH'"
+protocol_canonicalize_path
+log "Now pushing to $REPO_PATH"
 protocol_push_repo 2>&1 || error "failed to push to repository at $REPO_PATH";
