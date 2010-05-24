@@ -8,6 +8,6 @@ REPO_NAME=$1
 shift
 [ -n "$REPO_NAME" ] || error "Repository name must be given";
 
-load_repo $REPO_NAME
+load_repo $REPO_NAME 1>&2
 
 echo `protocol_canonicalize $*`
