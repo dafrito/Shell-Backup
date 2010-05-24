@@ -23,3 +23,9 @@ touch $REPOS
 PROFILES=$SETTINGS/profiles
 mkdir -p $PROFILES
 touch $PROFILES/full
+
+SESSION_DIR=/tmp/backup
+
+if [ "$SESSION" ]; then
+	source $SESSION_DIR/settings || error "Session settings failed to load"
+fi

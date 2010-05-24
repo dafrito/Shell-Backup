@@ -7,23 +7,21 @@ source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
 function check_and_lock {
-	if [ ! "$BACKUP_PID" ]; then
-		# We're the parent backup process, so export ourselves.
-		export BACKUP_PID=$$
+	if [ "$SESSION" ]; then
+		# Already locked, so continue
+		return 0;
 	fi
-
-	SESSION=/tmp/backup
-	if [ -e $SESSION/lock ]; then
-		if [ "$BACKUP_PID" != `cat $SESSION/lock` ]; then
-			error "Backup process at `cat $SESSION/lock` appears to be running; delete $SESSION/lock to unlock."
-		fi
-		source $SESSION/settings
-	else
-		mkdir -p $SESSION
-		echo $BACKUP_PID >$SESSION/lock
-		trap "rm -rf '$SESSION'" EXIT
-		touch $SESSION/settings
+	if [ -e "$SESSION_DIR/lock" ]; then
+		error "Backup process at `cat $SESSION_DIR/lock` appears to be running; delete $SESSION_DIR/lock to unlock."
 	fi
+	export SESSION=true
+	mkdir -p $SESSION_DIR
+	trap "rm -rf '$SESSION_DIR'" EXIT
+	echo $$ >$SESSION_DIR/lock
+	cat >$SESSION_DIR/settings <<EOF
+DRY_RUN=$DRY_RUN
+VERBOSE=$VERBOSE
+EOF
 }
 
 function parse_command {
@@ -45,7 +43,7 @@ function parse_command {
 				$EDITOR $REPOS
 			fi ;;
 		-lock|--lock)
-			echo "All backups are locked; delete $SESSION/lock to unlock." 1>&2
+			echo "All backups are locked; delete $SESSION_DIR/lock to unlock." 1>&2
 			trap '' EXIT
 			exit ;;
 		--log)
@@ -63,10 +61,6 @@ function parse_command {
 		*)
 			check_and_lock
 			log "Time of start: `date`"
-			cat >$SESSION/settings <<EOF
-DRY_RUN=$DRY_RUN
-VERBOSE=$VERBOSE
-EOF
 			profile="$*"
 			if [ ! -n "$profile" ]; then
 				profile=full
