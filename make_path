@@ -1,0 +1,13 @@
+#!/bin/bash
+PATH=/bin:/usr/bin
+[ -d "$BACKUP_EXECUTABLE_DIR" ] || BACKUP_EXECUTABLE_DIR=${0%/*}
+source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
+source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
+
+REPO_NAME=$1
+shift
+[ -n "$REPO_NAME" ] || error "Repository name must be given";
+
+load_repo $REPO_NAME
+
+echo `protocol_canonicalize $*`
