@@ -26,6 +26,10 @@ function protocol_init_repo {
 		git init --bare"
 }
 
+function protocol_canonicalize {
+	echo "$SSH_USERNAME"@"$SSH_URL":"$*"
+}
+
 function protocol_push_repo {
-	git push --mirror "$SSH_USERNAME"@"$SSH_URL":"$REPO_PATH"
+	git push --mirror `protocol_canonicalize "$REPO_PATH"`
 }

@@ -8,6 +8,10 @@ function protocol_repo_exists {
 	[ -d "$*" ];
 }
 
+function protocol_canonicalize {
+	readlink -m $*
+}
+
 function protocol_init_repo {
 	git init --bare "$REPO_PATH"
 }
@@ -15,4 +19,3 @@ function protocol_init_repo {
 function protocol_push_repo {
 	git push --mirror "$REPO_PATH"
 }
-
