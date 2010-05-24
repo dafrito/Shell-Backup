@@ -6,26 +6,27 @@ source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
 REPO_NAME=$1
 [ -n "$REPO_NAME" ] || error "Repository name must be given";
-PROJECT_DIR=${2-.}
 PROJECT=`pwd`
 PROJECT=${PROJECT##*/}
 
-load_repo $REPO_NAME
+load_repo "$REPO_NAME"
+if [ "$2" ]; then
+	REPO_PATH="$REPO_PATH/$2"
+fi
 
 function canonical_path {
-	protocol_canonicalize $PROJECT_DIR
+	protocol_canonicalize "$PROJECT_DIR"
 }
 
 log "Starting push to repository at `canonical_path`"
 set -o pipefail
-if protocol_repo_exists "$PROJECT_DIR/$PROJECT"; then
-	PROJECT_DIR=$PROJECT_DIR/$PROJECT
-else 
-	PROJECT_DIR=$PROJECT_DIR/$PROJECT.git
+PROJECT_DIR="$PROJECT"
+if ! protocol_repo_exists "$PROJECT_DIR"; then
+	PROJECT_DIR="$PROJECT.git"
 	if ! protocol_repo_exists "$PROJECT_DIR"; then
-		log "Creating new repository at '$PROJECT_DIR'"
-		protocol_init_repo $PROJECT_DIR 2>&1 || error "failed to create repository at `canonical_path`"
+		log "Creating new repository at `canonical_path`"
+		protocol_init_repo "$PROJECT_DIR" 2>&1 || error "failed to create repository at `canonical_path`"
 	fi
 fi
 log "Now pushing to `canonical_path`"
-protocol_push_repo $PROJECT_DIR 2>&1 || error "failed to push to repository at `canonical_path`"
+protocol_push_repo "$PROJECT_DIR" 2>&1 || error "failed to push to repository at `canonical_path`"
