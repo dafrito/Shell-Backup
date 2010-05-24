@@ -9,7 +9,7 @@ function load_remote_repo {
 	fi
 	mkdir -p $REMOTES_DIR
 	REMOTES=$REMOTES_DIR/$REPO_NAME
-	if [ ! -e "$REMOTES" ] || [ "$REPO_PATH" != "`cat $REMOTES.path`"; then
+	if [ ! -e "$REMOTES" ] || [ "$REPO_PATH" != "`cat $REMOTES.path`" ]; then
 		echo "$REPO_PATH" >"$REMOTES.path"
 		ssh -l "$SSH_USERNAME" "$SSH_URL" "find $REPO_PATH -maxdepth 1 -type d" >$REMOTES
 	fi
@@ -23,7 +23,7 @@ function protocol_load_settings {
 
 function protocol_repo_exists {
 	load_remote_repo
-	grep -q -F "`protocol_canonicalize $*`" $REMOTES
+	grep -q -F "$REPO_PATH/$*" $REMOTES
 }
 
 function protocol_init_repo {
