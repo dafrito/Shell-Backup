@@ -3,9 +3,9 @@
 # Note that protocol_load_settings is intentionally omitted
 
 function protocol_init_repo {
-	echo "git init --bare `readlink  -m $REPO_PATH`"
+	echo "git init to '$REPO_PATH'"
 }
 
 function protocol_push_repo {
-	echo "git push --mirror $REPO_PATH"
+	echo "git push to '$REPO_PATH'"
 }
