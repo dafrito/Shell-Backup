@@ -18,3 +18,14 @@ function load_protocol {
 	source $PROTOCOLS/$repo || error "protocol failed to load: $repo"
 	log "Loaded protocol: $repo"
 }
+
+function load_repo {
+	local name=$1
+	local data=`grep "^$name" "$REPOS"` || error "Repository data could not be found: $name"
+	set - $data
+	shift
+	load_protocol $1
+	shift
+	protocol_load_settings $* || error "settings for repository $namefailed to load";
+	[ "$DRY_RUN" ] && load_protocol dry
+}

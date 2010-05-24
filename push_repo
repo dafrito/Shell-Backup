@@ -10,14 +10,8 @@ REPO_SUBDIR=$2
 PROJECT=`pwd`
 PROJECT=${PROJECT##*/}
 
-DATA=`grep "^$REPO_NAME	" "$REPOS"` || error "Repository data could not be found: $REPO_NAME"
-set - $DATA
-shift
-load_protocol $1
-shift
+load_repo $REPO_NAME
 
-protocol_load_settings $* || error "settings for repository $REPO_NAME failed to load";
-[ "$DRY_RUN" ] && load_protocol dry
 [ "$REPO_PATH" ] || error "repository $REPO_NAME must specify location";
 [ "$REPO_SUBDIR" ] && REPO_PATH="$REPO_PATH/$REPO_SUBDIR"
 log "Starting push to repository at '$REPO_PATH'"
