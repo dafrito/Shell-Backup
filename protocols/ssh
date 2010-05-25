@@ -34,7 +34,7 @@ function protocol_init_repo {
 }
 
 function protocol_canonicalize {
-	echo "$SSH_USERNAME@$SSH_URL:$REPO_PATH/$*"
+	echo "$SSH_USERNAME@$SSH_URL:$REPO_PATH${*+/$*}"
 }
 
 function protocol_push_repo {
