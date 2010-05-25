@@ -18,11 +18,13 @@ fi
 touch $SETTINGS/log || exit 1
 
 REPOS=$SETTINGS/repos
-touch $REPOS
+[ -e $REPOS ] || touch $REPOS
 
 PROFILES=$SETTINGS/profiles
-mkdir -p $PROFILES
-touch $PROFILES/full
+if [ ! -e $PROFILES ]; then
+	mkdir -p $PROFILES
+	touch $PROFILES/full
+fi
 
 SESSION_DIR=/tmp/backup
 
