@@ -14,10 +14,10 @@ log "Running profile '$PROFILE'"
 set -o pipefail
 PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
 if [ "$VERBOSE" ]; then
-	source "$PROFILE" $*
+	source ./"$PROFILE" $*
 	R=$?
 else
-	source "$PROFILE" $* 2>&1 1>>$LOG | tee -a $LOG 1>&2 
+	source ./"$PROFILE" $* 2>&1 1>>$LOG | tee -a $LOG 1>&2 
 	R=$?
 fi
 if [ "$R" = "0" ]; then
