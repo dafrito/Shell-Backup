@@ -12,7 +12,22 @@ function check_and_lock {
 		return 0;
 	fi
 	if [ -e "$SESSION_DIR/lock" ]; then
-		error "Backup process at `cat $SESSION_DIR/lock` appears to be running; delete $SESSION_DIR/lock to unlock."
+		local lock=$(<$SESSION_DIR/lock)
+		TOLERANT=true
+		case "$lock" in
+			[[:digit:]]*)
+				local cmd=$(ps --no-headers p $lock -o cmd)
+				if [ "$cmd" ]; then
+					error "Backup is locked by a currently running process - PID: $lock, name: '$cmd'"
+				else
+					error "Backup is locked, but the lock owner is no longer running."
+				fi
+				;;
+			*)
+				error "Backup appears to be explicitly locked."
+				;;
+		esac
+		die "Delete $SESSION_DIR/lock to unlock."
 	fi
 	export SESSION=true
 	mkdir -p $SESSION_DIR
