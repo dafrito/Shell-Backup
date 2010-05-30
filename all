@@ -1,5 +1,7 @@
 #!/bin/bash
 source ./library.sh || exit 1
 
-backup ./files
-backup ./git 
+backup ./files || ERR=1
+backup ./git || ERR=1
+
+exit $ERR
