@@ -2,7 +2,6 @@
 PATH=/bin:/usr/bin
 [ -d "$BACKUP_EXECUTABLE_DIR" ] || BACKUP_EXECUTABLE_DIR=${0%/*}
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
-source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
 TARGET_NAME=$1
 [ -n "$TARGET_NAME" ] || error "Target must be provided";
