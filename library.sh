@@ -35,7 +35,7 @@ function load_target {
 }
 
 function check_and_lock {
-	[ -e "$SETTINGS" ] || die "SETTINGS must be set"
+	[ -e "$ROOT" ] || die "ROOT must be set"
 	if [ "$SESSION" ]; then
 		# Already locked, so continue
 		return 0;
@@ -58,7 +58,7 @@ function check_and_lock {
 		esac
 		die "Delete $SESSION/lock to unlock."
 	fi
-	export SESSION=$SETTINGS/session
+	SESSION=$ROOT/session
 	mkdir -p $SESSION || die "Could not create session"
 	trap "rm -rf '$SESSION'" EXIT
 	echo $$ >$SESSION/lock

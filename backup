@@ -8,7 +8,7 @@ while [ "$1" ]; do
 	case "$cmd" in 
 		-s|--settings)
 			shift
-			SETTINGS=$1
+			ROOT=$1
 			;;
 		-n|--dry-run)
 			DRY_RUN=true
