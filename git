@@ -36,7 +36,7 @@ cmd=${1-all}
 case "$cmd" in
 	-private) 
 		push_to_git unfuddle
-		for repo in `all_repos`; do
+		for repo in `all_targets`; do
 			push_to_git $repo
 		done ;;
 	-public) push_to_git github ;;
