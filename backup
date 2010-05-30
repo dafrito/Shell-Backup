@@ -64,28 +64,13 @@ source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 function parse_command {
 	cmd=$1
 	case "$cmd" in 
-		-e|--edit)
-			shift
-			if [ -n "$1" ]; then
-				$EDITOR "$PROFILES/$*"
-			else
-				$EDITOR $TARGETS
-			fi ;;
+		-e|--edit) $EDITOR $TARGETS ;;
 		-lock|--lock)
 			check_and_lock
 			echo "All backups are locked; delete $SESSION/lock to unlock." 1>&2
 			echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION/lock
 			trap '' EXIT
 			exit ;;
-		-l|--list)
-			shift
-			for profile in `find $PROFILES -maxdepth 1`; do
-				if [ ! -n "$root" ]; then
-					root=`echo $profile | wc -m`
-				else
-					echo ${profile:$root}
-				fi
-			done  ;;
 		-*) die "Unrecognized command: $1" ;;
 		*)
 			check_and_lock
