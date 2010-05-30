@@ -1,4 +1,5 @@
 #!/bin/bash
+source "load-settings.sh" || exit 1
 
 if [ "$DRY_RUN" ]; then
 	dry="--dry-run";
