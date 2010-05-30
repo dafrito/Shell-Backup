@@ -13,12 +13,6 @@ fi
 TARGETS=$SETTINGS/targets
 [ -e $TARGETS ] || touch $TARGETS
 
-PROFILES=$SETTINGS/profiles
-if [ ! -e $PROFILES ]; then
-	mkdir -p $PROFILES
-	touch $PROFILES/full
-fi
-
 if [ -e "$SETTINGS/settings" ]; then
 	source "$SETTINGS/settings" || error "Global settings failed to load"
 fi 
