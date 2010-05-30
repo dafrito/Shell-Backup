@@ -28,6 +28,10 @@ fi
 
 SESSION_DIR=/tmp/backup
 
+if [ -e "$SETTINGS/settings" ]; then
+	source "$SETTINGS/settings" || error "Global settings failed to load"
+fi 
+
 if [ "$SESSION" ]; then
 	source $SESSION_DIR/settings || error "Session settings failed to load"
 fi
