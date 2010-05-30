@@ -16,10 +16,6 @@ function push {
 }
 
 function sync {
-	if [ "$VERBOSE" ]; then
-		verbose="--progress -v"
-		verbose=""
-	fi
 	if [ "$WINDOWS" ]; then
 		OS_SPECIFIC="-L"
 	else
