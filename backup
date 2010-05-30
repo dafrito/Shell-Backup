@@ -36,6 +36,11 @@ case "$cmd" in
 		echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION/lock
 		trap '' EXIT
 		exit ;;
+	-c) 
+		check_and_lock
+		export BACKUP_EXECUTABLE_DIR
+		bash $*
+		;;
 	-*) die "Unrecognized command: $1" ;;
 	*)
 		check_and_lock
