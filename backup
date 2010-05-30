@@ -30,7 +30,6 @@ source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 set - $ARGS
 cmd=$1
 case "$cmd" in 
-	-e|--edit) $EDITOR $TARGETS ;;
 	-lock|--lock)
 		check_and_lock
 		echo "All backups are locked; delete $SESSION/lock to unlock." 1>&2
