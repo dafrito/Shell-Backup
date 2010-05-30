@@ -35,7 +35,20 @@ TARGETS=$ROOT/config/targets
 function run {
 	check_and_lock
 	export BACKUP_EXECUTABLE_DIR DRY_RUN VERBOSE ROOT SESSION TARGETS
-	bash $*
+	case "$*" in
+		-*) true ;;
+		*) 
+			local cmd="$*"
+			if echo "$cmd" | grep -q '/'; then
+				local path=${cmd%/*}
+				cd $path
+				cmd=${cmd##*/}
+				pwd
+				echo $cmd
+			fi
+			bash $cmd
+		;;
+	esac
 }
 
 set - $ARGS
