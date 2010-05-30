@@ -45,6 +45,8 @@ function run {
 				cmd=${cmd##*/}
 				pwd
 				echo $cmd
+			else
+				cd $ROOT
 			fi
 			bash $cmd
 		;;
