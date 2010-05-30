@@ -33,3 +33,38 @@ function load_target {
 	protocol_load_settings $* || error "Settings for target '$name' failed to load";
 	[ "$DRY_RUN" ] && load_protocol dry
 }
+
+function check_and_lock {
+	[ -e "$SETTINGS" ] || die "SETTINGS must be set"
+	if [ "$SESSION" ]; then
+		# Already locked, so continue
+		return 0;
+	fi
+	if [ -e "$SESSION/lock" ]; then
+		local lock=$(<$SESSION/lock)
+		TOLERANT=true
+		case "$lock" in
+			[[:digit:]]*)
+				local cmd=$(ps --no-headers p $lock -o cmd)
+				if [ "$cmd" ]; then
+					error "Backup is locked by a currently running process - PID: $lock, name: '$cmd'"
+				else
+					error "Backup is locked, but the lock owner is no longer running."
+				fi
+				;;
+			*)
+				error "Backup appears to be explicitly locked."
+				;;
+		esac
+		die "Delete $SESSION/lock to unlock."
+	fi
+	export SESSION=$SETTINGS/session
+	mkdir -p $SESSION || die "Could not create session"
+	trap "rm -rf '$SESSION'" EXIT
+	echo $$ >$SESSION/lock
+	cat >$SESSION/settings <<EOF
+SETTINGS=$SETTINGS
+DRY_RUN=$DRY_RUN
+VERBOSE=$VERBOSE
+EOF
+}
