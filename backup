@@ -25,7 +25,12 @@ while [ "$1" ]; do
 	esac
 	shift
 done
-source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
+
+ROOT=${ROOT-$HOME/.backup}
+mkdir -p "$ROOT/config" || die "$ROOT could not be created"
+
+TARGETS=$ROOT/config/targets
+[ -e $TARGETS ] || touch $TARGETS
 
 set - $ARGS
 cmd=$1
