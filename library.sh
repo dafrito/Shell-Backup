@@ -17,7 +17,7 @@ function sync {
 	if [ "$DRY_RUN" ]; then
 		local dry="--dry-run";
 	fi
-	local OS_SPECIFIC="-pgol"
+	local OS_SPECIFIC="-pl"
 	if [ "$WINDOWS" ]; then
 		OS_SPECIFIC="-L"
 	fi
