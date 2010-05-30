@@ -12,12 +12,13 @@ cd $PROFILES
 [ -f "$PROFILE" ] || error "backup: $PROFILE is not a valid profile"
 log "Running profile '$PROFILE'"
 set -o pipefail
-PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
+export PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
+export BACKUP_EXECUTABLE_DIR
 if [ "$VERBOSE" ]; then
-	source ./"$PROFILE" $*
+	bash ./"$PROFILE" $*
 	R=$?
 else
-	source ./"$PROFILE" $* 2>&1 1>>$LOG | tee -a $LOG 1>&2 
+	bash ./"$PROFILE" $* 2>&1 1>>$LOG | tee -a $LOG 1>&2 
 	R=$?
 fi
 if [ "$R" = "0" ]; then
