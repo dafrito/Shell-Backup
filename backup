@@ -27,7 +27,7 @@ while [ "$1" ]; do
 done
 
 ROOT=${ROOT-$HOME/.backup}
-mkdir -p "$ROOT/config" || die "$ROOT could not be created"
+mkdir -p "$ROOT/config" || die "$ROOT/config could not be created"
 
 TARGETS=$ROOT/config/targets
 [ -e $TARGETS ] || touch $TARGETS
