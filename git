@@ -24,25 +24,30 @@ function push_one_to_git {
 }
 
 function push_to_git {
-	cd ~/projects
-	for i in `ls`; do
-		cd $i
-		push_one_to_git $i $1
-		cd ..
-	done
+	if [ -n "$2" ]; then
+		push_one_to_git $2 $1
+	else
+		cd ~/projects
+		for i in `ls`; do
+			cd $i
+			push_one_to_git $i $1
+			cd ..
+		done
+	fi
 }
 
 cmd=${1-all}
+shift
 case "$cmd" in
 	-private) 
 		push_to_git unfuddle
 		for repo in `all_targets`; do
-			push_to_git $repo
+			push_to_git $repo $*
 		done ;;
-	-public) push_to_git github ;;
+	-public) push_to_git github $* ;;
 	all) 
-		backup git -public || error "Failed to push to public repos"
-		backup git -private || error "Failed to push to private repos"
+		backup git -public $* || error "Failed to push to public repos"
+		backup git -private $* || error "Failed to push to private repos"
 	;;
-	*) push_to_git $1 ;;
+	*) push_to_git $cmd $*
 esac
