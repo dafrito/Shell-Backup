@@ -4,8 +4,6 @@ if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
 fi
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 
-PROTOCOLS=$BACKUP_EXECUTABLE_DIR/protocols
-
 [ -n "$SETTINGS" ] || SETTINGS=$HOME/.backup
 [ -n "$LOG" ] || LOG=$SETTINGS/log
 if [ ! -e "$SETTINGS" ]; then
