@@ -77,9 +77,6 @@ function parse_command {
 			echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION/lock
 			trap '' EXIT
 			exit ;;
-		--log)
-			cat $LOG
-			exit ;;
 		-l|--list)
 			shift
 			for profile in `find $PROFILES -maxdepth 1`; do

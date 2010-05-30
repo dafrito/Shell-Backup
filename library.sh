@@ -1,11 +1,7 @@
 #!/bin/bash
 
 function log {
-	if [ "$VERBOSE" ]; then
-		echo $*
-	else
-		echo "`date +'%F %T'` $*" >>$LOG
-	fi
+	echo $*
 }
 
 function error {
