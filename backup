@@ -8,8 +8,8 @@ function check_and_lock {
 		# Already locked, so continue
 		return 0;
 	fi
-	if [ -e "$SESSION_DIR/lock" ]; then
-		local lock=$(<$SESSION_DIR/lock)
+	if [ -e "$SESSION/lock" ]; then
+		local lock=$(<$SESSION/lock)
 		TOLERANT=true
 		case "$lock" in
 			[[:digit:]]*)
@@ -24,13 +24,13 @@ function check_and_lock {
 				error "Backup appears to be explicitly locked."
 				;;
 		esac
-		die "Delete $SESSION_DIR/lock to unlock."
+		die "Delete $SESSION/lock to unlock."
 	fi
-	export SESSION=true
-	mkdir -p $SESSION_DIR
-	trap "rm -rf '$SESSION_DIR'" EXIT
-	echo $$ >$SESSION_DIR/lock
-	cat >$SESSION_DIR/settings <<EOF
+	export SESSION=$SETTINGS/session
+	mkdir -p $SESSION
+	trap "rm -rf '$SESSION'" EXIT
+	echo $$ >$SESSION/lock
+	cat >$SESSION/settings <<EOF
 SETTINGS=$SETTINGS
 DRY_RUN=$DRY_RUN
 VERBOSE=$VERBOSE
@@ -70,8 +70,8 @@ function parse_command {
 			fi ;;
 		-lock|--lock)
 			check_and_lock
-			echo "All backups are locked; delete $SESSION_DIR/lock to unlock." 1>&2
-			echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION_DIR/lock
+			echo "All backups are locked; delete $SESSION/lock to unlock." 1>&2
+			echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION/lock
 			trap '' EXIT
 			exit ;;
 		--log)

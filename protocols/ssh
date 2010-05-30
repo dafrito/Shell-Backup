@@ -2,7 +2,7 @@
 
 function load_remote_repo {
 	if [ "$SESSION" ]; then
-		REMOTES_DIR="$SESSION_DIR/remotes";
+		REMOTES_DIR="$SESSION/remotes";
 	else
 		REMOTES_DIR=/tmp/backup-ssh-remotes.$$/
 		trap 'rm -rf "$REMOTES_DIR"' EXIT
