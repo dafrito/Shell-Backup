@@ -27,23 +27,20 @@ while [ "$1" ]; do
 done
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
-function parse_command {
-	cmd=$1
-	case "$cmd" in 
-		-e|--edit) $EDITOR $TARGETS ;;
-		-lock|--lock)
-			check_and_lock
-			echo "All backups are locked; delete $SESSION/lock to unlock." 1>&2
-			echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION/lock
-			trap '' EXIT
-			exit ;;
-		-*) die "Unrecognized command: $1" ;;
-		*)
-			check_and_lock
-			export PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
-			export BACKUP_EXECUTABLE_DIR
-			bash $*
-			;;
-	esac;
-}
-parse_command $ARGS
+set - $ARGS
+cmd=$1
+case "$cmd" in 
+	-e|--edit) $EDITOR $TARGETS ;;
+	-lock|--lock)
+		check_and_lock
+		echo "All backups are locked; delete $SESSION/lock to unlock." 1>&2
+		echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION/lock
+		trap '' EXIT
+		exit ;;
+	-*) die "Unrecognized command: $1" ;;
+	*)
+		check_and_lock
+		export BACKUP_EXECUTABLE_DIR
+		bash $*
+		;;
+esac;
