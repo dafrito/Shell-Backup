@@ -33,4 +33,4 @@ function all_repos {
 	cat $REPOS | sed -e 's/[\t ].*$//'
 }
 
-trap 'trap - EXIT; exit $FAILURES' EXIT
+trap 'exit $FAILURES' EXIT
