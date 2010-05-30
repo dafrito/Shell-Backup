@@ -4,6 +4,7 @@ if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
 	exit 1
 fi
 PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
+source "$BACKUP_EXECUTABLE_DIR/library.sh"
 
 function push {
 	if [ "$DRY_RUN" ]; then
