@@ -26,7 +26,7 @@ if [ ! -e $PROFILES ]; then
 	touch $PROFILES/full
 fi
 
-SESSION_DIR=/tmp/backup
+SESSION_DIR=$SETTINGS/session
 
 if [ -e "$SETTINGS/settings" ]; then
 	source "$SETTINGS/settings" || error "Global settings failed to load"
