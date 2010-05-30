@@ -32,6 +32,12 @@ mkdir -p "$ROOT/config" || die "$ROOT/config could not be created"
 TARGETS=$ROOT/config/targets
 [ -e $TARGETS ] || touch $TARGETS
 
+function run {
+	check_and_lock
+	export BACKUP_EXECUTABLE_DIR DRY_RUN VERBOSE ROOT SESSION TARGETS
+	bash $*
+}
+
 set - $ARGS
 cmd=$1
 case "$cmd" in 
@@ -41,15 +47,7 @@ case "$cmd" in
 		echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION/lock
 		trap '' EXIT
 		exit ;;
-	-c) 
-		check_and_lock
-		export BACKUP_EXECUTABLE_DIR
-		bash $*
-		;;
+	-c) run $* ;;
 	-*) die "Unrecognized command: $1" ;;
-	*)
-		check_and_lock
-		export BACKUP_EXECUTABLE_DIR
-		bash $*
-		;;
+	*) run $* ;;
 esac;
