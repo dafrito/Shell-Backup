@@ -14,6 +14,10 @@ function die {
 	exit 1
 }
 
+function all_targets {
+    cat $TARGETS | sed -e 's/[\t ].*$//'
+}
+
 function load_protocol {
 	[ -n "$1" ] || error "Protocol must be specified";
 	local protocol=$1
