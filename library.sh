@@ -10,7 +10,7 @@ function error {
 }
 
 function die {
-	echo $* 1>&2
+	error $*
 	exit 1
 }
 
