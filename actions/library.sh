@@ -21,10 +21,9 @@ function push {
 }
 
 function sync {
+	local OS_SPECIFIC="-pgol"
 	if [ "$WINDOWS" ]; then
 		OS_SPECIFIC="-L"
-	else
-		OS_SPECIFIC="-pgol"
 	fi
 	rsync $verbose $dry -ih -rtzR $OS_SPECIFIC --exclude-from ~/.gitignore --exclude '.git/***' $* $path || 
 		error "Failed to sync"
