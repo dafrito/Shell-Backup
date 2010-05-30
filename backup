@@ -2,7 +2,6 @@
 PATH=/bin:/usr/bin
 [ -d "$BACKUP_EXECUTABLE_DIR" ] || BACKUP_EXECUTABLE_DIR=${0%/*}
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
-source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
 function check_and_lock {
 	if [ "$SESSION" ]; then
@@ -32,23 +31,36 @@ function check_and_lock {
 	trap "rm -rf '$SESSION_DIR'" EXIT
 	echo $$ >$SESSION_DIR/lock
 	cat >$SESSION_DIR/settings <<EOF
+SETTINGS=$SETTINGS
 DRY_RUN=$DRY_RUN
 VERBOSE=$VERBOSE
 EOF
 }
 
+while [ "$1" ]; do 
+	cmd=$1
+	case "$cmd" in 
+		-s|--settings)
+			shift
+			SETTINGS=$1
+			;;
+		-n|--dry-run)
+			DRY_RUN=true
+			VERBOSE=true
+			;;
+		-v|--verbose)
+			VERBOSE=true
+			;;
+		*)
+			ARGS="$ARGS $1"
+	esac
+	shift
+done
+source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
+
 function parse_command {
 	cmd=$1
 	case "$cmd" in 
-		-n|--dry-run)
-			shift
-			DRY_RUN=true
-			VERBOSE=true
-			parse_command $*;;
-		-v|--verbose)
-			shift
-			VERBOSE=true
-			parse_command $*;;
 		-e|--edit)
 			shift
 			if [ -n "$1" ]; then
@@ -74,10 +86,11 @@ function parse_command {
 					echo ${profile:$root}
 				fi
 			done  ;;
+		-*) die "Unrecognized command: $1" ;;
 		*)
 			check_and_lock
 			$BACKUP_EXECUTABLE_DIR/run_profile $*
 			;;
 	esac;
 }
-parse_command $*
+parse_command $ARGS
