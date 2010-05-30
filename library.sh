@@ -33,7 +33,6 @@ function load_target {
 	set - $data
 	shift
 	load_protocol $1
-	shift
 	protocol_load_settings $* || error "Settings for target '$name' failed to load";
 	[ "$DRY_RUN" ] && load_protocol dry
 }

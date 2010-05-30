@@ -16,6 +16,7 @@ function load_target {
 }
 
 function protocol_load_settings {
+	shift
 	SSH_URL=${1?"URL must be given for $TARGET_NAME"};
 	SSH_USERNAME=${2?"username must be given for $TARGET_NAME"};
 	TARGET=${3?"remote path must be given for $TARGET_NAME"};
