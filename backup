@@ -40,6 +40,7 @@ function run {
 
 set - $ARGS
 cmd=$1
+[ -n "$cmd" ] || die "No command given"
 case "$cmd" in 
 	-lock|--lock)
 		check_and_lock
