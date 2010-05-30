@@ -62,9 +62,5 @@ function check_and_lock {
 	mkdir -p $SESSION || die "Could not create session"
 	trap "rm -rf '$SESSION'" EXIT
 	echo $$ >$SESSION/lock
-	cat >$SESSION/settings <<EOF
-SETTINGS=$SETTINGS
-DRY_RUN=$DRY_RUN
-VERBOSE=$VERBOSE
-EOF
+	export DRY_RUN VERBOSE ROOT SESSION
 }
