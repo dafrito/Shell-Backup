@@ -12,8 +12,8 @@ if [ ! -e "$SETTINGS" ]; then
 	fi
 fi
 
-REPOS=$SETTINGS/repos
-[ -e $REPOS ] || touch $REPOS
+TARGETS=$SETTINGS/targets
+[ -e $TARGETS ] || touch $TARGETS
 
 PROFILES=$SETTINGS/profiles
 if [ ! -e $PROFILES ]; then

@@ -22,14 +22,14 @@ function load_protocol {
 	log "Loaded protocol: $protocol"
 }
 
-function load_repo {
+function load_target {
 	local name=$1
-	local data=`grep "^$name" "$REPOS"`
-	[ -n "$data" ] || error "Repository data could not be found: $name" 
+	local data=`grep "^$name" "$TARGETS"`
+	[ -n "$data" ] || error "Target does not exist: $name" 
 	set - $data
 	shift
 	load_protocol $1
 	shift
-	protocol_load_settings $* || error "settings for repository $namefailed to load";
+	protocol_load_settings $* || error "Settings for target '$name' failed to load";
 	[ "$DRY_RUN" ] && load_protocol dry
 }

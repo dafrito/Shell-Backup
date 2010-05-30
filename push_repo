@@ -4,12 +4,12 @@ PATH=/bin:/usr/bin
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
-REPO_NAME=$1
-[ -n "$REPO_NAME" ] || error "Repository name must be given";
+TARGET_NAME=$1
+[ -n "$TARGET_NAME" ] || error "Target must be provided";
 
-load_repo "$REPO_NAME"
+load_target "$TARGET_NAME"
 if [ "$2" ]; then
-	REPO_PATH="$REPO_PATH/$2"
+	TARGET="$TARGET/$2"
 fi
 if [ "$3" ]; then
 	PROJECT=$3
@@ -22,7 +22,7 @@ function canonical_path {
 	protocol_canonicalize "$PROJECT_DIR"
 }
 
-log "Starting push to repository at `canonical_path`"
+log "Starting push to `canonical_path`"
 set -o pipefail
 PROJECT_DIR="$PROJECT"
 if ! protocol_repo_exists "$PROJECT_DIR"; then

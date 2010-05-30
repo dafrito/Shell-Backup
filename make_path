@@ -4,10 +4,10 @@ PATH=/bin:/usr/bin
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
-REPO_NAME=$1
+TARGET_NAME=$1
 shift
-[ -n "$REPO_NAME" ] || error "Repository name must be given";
+[ -n "$TARGET_NAME" ] || error "Target must be provided";
 
-load_repo $REPO_NAME 1>&2
+load_target $TARGET_NAME 1>&2
 
 echo `protocol_canonicalize $*`

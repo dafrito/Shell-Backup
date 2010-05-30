@@ -69,7 +69,7 @@ function parse_command {
 			if [ -n "$1" ]; then
 				$EDITOR "$PROFILES/$*"
 			else
-				$EDITOR $REPOS
+				$EDITOR $TARGETS
 			fi ;;
 		-lock|--lock)
 			check_and_lock
