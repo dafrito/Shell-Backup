@@ -1,29 +1,33 @@
 #!/bin/bash
 source ./library.sh || exit 1
 
+function push_one_to_git {
+	local project=$1
+	local repo=$2
+	echo "Pushing $project to $repo"
+	case "$repo" in
+		github)
+			case "$project" in
+				links|backup-settings) true ;; 
+				*) push github 2>&1 || error "Failed to push to github" ;;
+			esac
+		;;
+		unfuddle)
+			case "$project" in
+				fritomod|riviera) push unfuddle ;;
+			esac
+		;;
+		*)
+			push_repo $repo projects $project || error "Backup failed for '$project'"
+		;;
+	esac
+}
+
 function push_to_git {
-	repo=$1
-	echo "Pushing all projects to $repo"
 	cd ~/projects
-	for project in `ls`; do
-		cd $project
-		echo "Pushing $project to $repo"
-		case "$repo" in
-			github)
-				if [ "$project" != "links" ]; then
-					# links is a temporary project, so don't propagate it
-					push github 2>&1 || error "Failed to push to github"
-				fi
-				;;
-			unfuddle)
-				case "$project" in
-					fritomod|riviera) push unfuddle ;;
-				esac
-				;;
-			*)
-				push_repo $repo projects || error "Backup failed for '$project'"
-				;;
-		esac
+	for i in `ls`; do
+		cd $i
+		push_one_to_git $i $1
 		cd ..
 	done
 }
