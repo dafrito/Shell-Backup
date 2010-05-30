@@ -6,12 +6,16 @@ source $BACKUP_EXECUTABLE_DIR/load-settings.sh || exit 1
 
 REPO_NAME=$1
 [ -n "$REPO_NAME" ] || error "Repository name must be given";
-PROJECT=`pwd`
-PROJECT=${PROJECT##*/}
 
 load_repo "$REPO_NAME"
 if [ "$2" ]; then
 	REPO_PATH="$REPO_PATH/$2"
+fi
+if [ "$3" ]; then
+	PROJECT=$3
+else
+	PROJECT=`pwd`
+	PROJECT=${PROJECT##*/}
 fi
 
 function canonical_path {
