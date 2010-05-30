@@ -43,8 +43,6 @@ function run {
 				local path=${cmd%/*}
 				cd $path
 				cmd=${cmd##*/}
-				pwd
-				echo $cmd
 			else
 				cd $ROOT
 			fi
