@@ -3,6 +3,3 @@ source ./library.sh || exit 1
 
 backup ./sync
 backup ./git 
-
-# TODO:
-# Sync music to portable hard-drive
