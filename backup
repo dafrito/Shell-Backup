@@ -40,7 +40,9 @@ function parse_command {
 		-*) die "Unrecognized command: $1" ;;
 		*)
 			check_and_lock
-			$BACKUP_EXECUTABLE_DIR/run_profile $*
+			export PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
+			export BACKUP_EXECUTABLE_DIR
+			bash $*
 			;;
 	esac;
 }
