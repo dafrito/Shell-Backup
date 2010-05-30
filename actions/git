@@ -41,8 +41,8 @@ case "$cmd" in
 		done ;;
 	-public) push_to_git github ;;
 	all) 
-		run_profile git -public || error "Failed to push to public repos"
-		run_profile git -private || error "Failed to push to private repos"
+		backup git -public || error "Failed to push to public repos"
+		backup git -private || error "Failed to push to private repos"
 	;;
 	*) push_to_git $1 ;;
 esac
