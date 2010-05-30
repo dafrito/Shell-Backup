@@ -1,9 +1,6 @@
 #!/bin/bash
 source ./library.sh || exit 1
 
-CONFIG=`pwd`/config
-[ -d "$CONFIG" ] || die "CONFIG does not exist or is not a file: $CONFIG"
-
 function sync_to_target {
 	target=$1
 	shift
@@ -15,12 +12,12 @@ function sync_to_target {
 	if [ "$target" = "portable" ]; then
 		WINDOWS=true
 	fi
-	sync $* `cat $CONFIG/environment`
+	sync $* `cat $ROOT/config/environment`
 	sync $* .ssh --exclude=id_rsa
 	if [ "$target" = "bluespot" ]; then
 		path="$path/home/dafrito"
 	fi
-	sync $* --delete --max-delete=10 `cat $CONFIG/user`
+	sync $* --delete --max-delete=10 `cat $ROOT/config/user`
 }
 
 if [ "$1" ]; then
