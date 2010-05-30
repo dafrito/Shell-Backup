@@ -15,11 +15,11 @@ function die {
 }
 
 function load_protocol {
-	local repo=$1
-	[ "$repo" ] || error "Repository type must be specified for $repo";
-	[ -f "$BACKUP_EXECUTABLE_DIR/protocols/$repo" ] || error "Unrecognized repository type: $repo";
-	source $BACKUP_EXECUTABLE_DIR/protocols/$repo || error "protocol failed to load: $repo"
-	log "Loaded protocol: $repo"
+	[ -n "$1" ] || error "Protocol must be specified";
+	local protocol=$1
+	[ -f "$BACKUP_EXECUTABLE_DIR/protocols/$protocol" ] || error "Unrecognized protocol: $protocol";
+	source $BACKUP_EXECUTABLE_DIR/protocols/$protocol || error "Protocol failed to load: $protocol"
+	log "Loaded protocol: $protocol"
 }
 
 function load_repo {
