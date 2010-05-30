@@ -9,6 +9,7 @@ function sync_to_repo {
 	shift
 	echo "Syncing files with $repo"
 	path=`make_path "$repo"`
+	[ -n "$path" ] || die "No path found for repo: $repo"
 	echo "Destination: $path"
 	cd ~
 	if [ "$repo" = "portable" ]; then
