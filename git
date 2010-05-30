@@ -4,7 +4,7 @@ source ./library.sh || exit 1
 function push_one_to_git {
 	local project=$1
 	local repo=$2
-	echo "Pushing $project to $repo"
+	log "Pushing $project to $repo"
 	case "$repo" in
 		github)
 			case "$project" in
