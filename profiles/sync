@@ -1,0 +1,31 @@
+#!/bin/bash
+source ./library.sh || exit 1
+
+CONFIG=`pwd`/config
+
+function sync_to_repo {
+	repo=$1
+	shift
+	echo "Syncing files with $repo"
+	path=`make_path "$repo"`
+	echo "Destination: $path"
+	cd ~
+	if [ "$repo" = "portable" ]; then
+		WINDOWS=true
+	fi
+	sync $* `cat $CONFIG/environment`
+	sync $* --delete --max-delete=3 .backup --exclude=log
+	sync $* .ssh --exclude=id_rsa
+	if [ "$repo" = "bluespot" ]; then
+		path="$path/home/dafrito"
+	fi
+	sync $* --delete --max-delete=10 `cat $CONFIG/user`
+}
+
+if [ "$1" ]; then
+	sync_to_repo $*
+else
+	for repo in `all_repos`; do
+		sync_to_repo $repo
+	done
+fi

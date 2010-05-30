@@ -1,0 +1,44 @@
+#!/bin/bash
+source ./library.sh || exit 1
+
+function push_to_git {
+	repo=$1
+	echo "Pushing all projects to $repo"
+	cd ~/projects
+	for project in `ls`; do
+		cd $project
+		echo "Pushing $project to $repo"
+		case "$repo" in
+			github)
+				if [ "$project" != "links" ]; then
+					# links is a temporary project, so don't propagate it
+					push github 2>&1 || error "Failed to push to github"
+				fi
+				;;
+			unfuddle)
+				case "$project" in
+					fritomod|riviera) push unfuddle ;;
+				esac
+				;;
+			*)
+				push_repo $repo projects || error "Backup failed for '$project'"
+				;;
+		esac
+		cd ..
+	done
+}
+
+cmd=${1-all}
+case "$cmd" in
+	-private) 
+		push_to_git unfuddle
+		for repo in `all_repos`; do
+			push_to_git $repo
+		done ;;
+	-public) push_to_git github ;;
+	all) 
+		run_profile git -public
+		run_profile git -private
+	;;
+	*) push_to_git $1 ;;
+esac
