@@ -30,8 +30,8 @@ function sync {
 		error "Failed to sync"
 }
 
-function all_repos {
-	cat $REPOS | sed -e 's/[\t ].*$//'
+function all_targets {
+	cat $TARGETS | sed -e 's/[\t ].*$//'
 }
 
 trap 'exit $FAILURES' EXIT

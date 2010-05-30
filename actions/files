@@ -4,29 +4,29 @@ source ./library.sh || exit 1
 CONFIG=`pwd`/config
 [ -d "$CONFIG" ] || die "CONFIG does not exist or is not a file: $CONFIG"
 
-function sync_to_repo {
-	repo=$1
+function sync_to_target {
+	target=$1
 	shift
-	echo "Syncing files with $repo"
-	path=`make_path "$repo"`
-	[ -n "$path" ] || die "No path found for repo: $repo"
+	echo "Syncing files with $target"
+	path=`make_path "$target"`
+	[ -n "$path" ] || die "No path found for target: $target"
 	echo "Destination: $path"
 	cd ~
-	if [ "$repo" = "portable" ]; then
+	if [ "$target" = "portable" ]; then
 		WINDOWS=true
 	fi
 	sync $* `cat $CONFIG/environment`
 	sync $* .ssh --exclude=id_rsa
-	if [ "$repo" = "bluespot" ]; then
+	if [ "$target" = "bluespot" ]; then
 		path="$path/home/dafrito"
 	fi
 	sync $* --delete --max-delete=10 `cat $CONFIG/user`
 }
 
 if [ "$1" ]; then
-	sync_to_repo $*
+	sync_to_target $*
 else
-	for repo in `all_repos`; do
-		sync_to_repo $repo
+	for target in `all_targets`; do
+		sync_to_target $target
 	done
 fi
