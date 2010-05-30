@@ -24,9 +24,11 @@ function sync_to_target {
 }
 
 if [ "$1" ]; then
+	set -e
 	sync_to_target $*
 else
 	for target in `all_targets`; do
-		sync_to_target $target
+		backup files $target || ERR=1
 	done
 fi
+exit $ERR
