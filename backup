@@ -27,7 +27,7 @@ function check_and_lock {
 		die "Delete $SESSION/lock to unlock."
 	fi
 	export SESSION=$SETTINGS/session
-	mkdir -p $SESSION
+	mkdir -p $SESSION || die "Could not create session"
 	trap "rm -rf '$SESSION'" EXIT
 	echo $$ >$SESSION/lock
 	cat >$SESSION/settings <<EOF
