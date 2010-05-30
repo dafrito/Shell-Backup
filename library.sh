@@ -4,23 +4,18 @@ if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
 	exit 1
 fi
 PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
-source "load-settings.sh" || exit 1
-
-if [ "$DRY_RUN" ]; then
-	dry="--dry-run";
-fi
-
-FAILURES=0
-function error {
-	let FAILURES++
-	echo $* 1>&2
-}
 
 function push {
+	if [ "$DRY_RUN" ]; then
+		local dry="--dry-run";
+	fi
 	git push $dry $* 2>&1 || error "Failed to push"
 }
 
 function sync {
+	if [ "$DRY_RUN" ]; then
+		local dry="--dry-run";
+	fi
 	local OS_SPECIFIC="-pgol"
 	if [ "$WINDOWS" ]; then
 		OS_SPECIFIC="-L"
