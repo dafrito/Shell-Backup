@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
+	echo "BACKUP_EXECUTABLE_DIR must be defined"
+	exit 1
+fi
+PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
 source "load-settings.sh" || exit 1
 
 if [ "$DRY_RUN" ]; then
