@@ -1,5 +1,4 @@
 #!/bin/bash
-PATH=/bin:/usr/bin
 if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
 	BACKUP_EXECUTABLE_DIR=${0%/*}
 fi
