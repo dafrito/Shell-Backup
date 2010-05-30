@@ -15,7 +15,6 @@ function sync_to_repo {
 		WINDOWS=true
 	fi
 	sync $* `cat $CONFIG/environment`
-	sync $* --delete --max-delete=3 .backup --exclude=log
 	sync $* .ssh --exclude=id_rsa
 	if [ "$repo" = "bluespot" ]; then
 		path="$path/home/dafrito"
