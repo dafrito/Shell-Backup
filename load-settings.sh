@@ -7,8 +7,8 @@ source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 
 PROTOCOLS=$BACKUP_EXECUTABLE_DIR/protocols
 
-[ -n "$SETTINGS" ] || SETTINGS=$HOME/etc/backup
-LOG=$SETTINGS/log
+[ -n "$SETTINGS" ] || SETTINGS=$HOME/.backup
+[ -n "$LOG" ] || LOG=$SETTINGS/log
 if [ ! -e "$SETTINGS" ]; then
 	if ! mkdir "$SETTINGS"; then
 		echo "$SETTINGS could not be created" 1>&2;
