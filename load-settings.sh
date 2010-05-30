@@ -1,7 +1,5 @@
 #!/bin/bash
-if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
-	BACKUP_EXECUTABLE_DIR=${0%/*}
-fi
+[ -d "$BACKUP_EXECUTABLE_DIR" ] || BACKUP_EXECUTABLE_DIR=${0%/*}
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 
 [ -n "$SETTINGS" ] || SETTINGS=$HOME/.backup
