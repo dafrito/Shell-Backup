@@ -1,3 +1,7 @@
+/* ex: set ts=8 expandtab: */ 
 local		local	/home/dafrito/.mirror
 portable	local	/mnt/data
-bluespot	ssh		dafrito.com bluespot /home/bluespot
+bluespot	ssh	dafrito.com bluespot /home/bluespot
+github		web
+unfuddle	web
+private		group	local,portable,bluespot
