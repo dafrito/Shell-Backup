@@ -1,0 +1,23 @@
+#!/bin/bash
+
+function protocol_load_settings {
+	TARGET=$1
+}
+
+function protocol_repo_exists {
+	git remote | grep -qF $TARGET
+}
+
+function protocol_canonicalize {
+	echo $TARGET
+}
+
+function protocol_init_repo {
+	die "Cannot init a remote repository at $TARGET"
+	# TODO: It's possible we could run 'git remote add' here, but I don't
+	# like modifying original content unless absolutely necessary.
+}
+
+function protocol_push_repo {
+	git push --mirror --porcelain `protocol_canonicalize "$*"`
+}
