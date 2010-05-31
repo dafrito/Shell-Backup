@@ -7,6 +7,13 @@ TARGET_NAME=$1
 [ -n "$TARGET_NAME" ] || error "Target must be provided";
 
 load_target "$TARGET_NAME"
+if [ "$GROUP" ]; then
+	shift
+	for target in "$GROUP"; do
+		./push_repo $target $* || ERR=1
+	done
+	exit $ERR
+fi
 if [ "$2" ]; then
 	TARGET="$TARGET/$2"
 fi

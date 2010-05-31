@@ -32,9 +32,15 @@ function load_target {
 	[ -n "$data" ] || error "Target does not exist: $name" 
 	set - $data
 	shift
-	load_protocol $1
-	protocol_load_settings $* || error "Settings for target '$name' failed to load";
-	[ "$DRY_RUN" ] && load_protocol dry
+	if [ "$1" = "group" ]; then
+		IFS=','
+		set - $2
+		GROUP=$*
+	else
+		load_protocol $1
+		protocol_load_settings $* || error "Settings for target '$name' failed to load";
+		[ "$DRY_RUN" ] && load_protocol dry
+	fi
 }
 
 function check_and_lock {
