@@ -1,0 +1,14 @@
+/* ex: set ts=8 expandtab: */ 
+~/projects/backup-settings 	private,github
+~/projects/backup 		private,github
+~/projects/db-util 		private,github
+~/projects/flags 		private,github
+~/projects/fm 			private,github
+~/projects/links		private
+~/projects/rfe 			private,github
+~/projects/riviera              private,github,unfuddle
+~/projects/rpchat               private,github
+~/projects/sparks               private,github
+~/projects/trinkets             private,github
+~/projects/tst	                private,github
+~/projects/fritomod             private,github,unfuddle
