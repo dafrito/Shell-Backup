@@ -15,7 +15,7 @@ function die {
 }
 
 function all_targets {
-    cat $TARGETS | sed -e 's/[\t ].*$//'
+    cat $TARGETS | sed -ne '/^[^#\/]/s/[\t ].*$//p'
 }
 
 function load_protocol {
