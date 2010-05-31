@@ -2,23 +2,23 @@
 source ./library.sh || exit 1
 
 function push_one_to_git {
-	local project=$1
-	local repo=$2
-	log "Pushing $project to $repo"
-	case "$repo" in
+	local repo=$1
+	local target=$2
+	log "Pushing $repo to $target"
+	case "$target" in
 		github)
-			case "$project" in
+			case "$repo" in
 				links|backup-settings) true ;; 
 				*) push github 2>&1 || error "Failed to push to github" ;;
 			esac
 		;;
 		unfuddle)
-			case "$project" in
+			case "$repo" in
 				fritomod|riviera) push unfuddle ;;
 			esac
 		;;
 		*)
-			push_repo $repo projects $project || error "Backup failed for '$project'"
+			push_repo $target projects $repo || error "Backup failed: $repo"
 		;;
 	esac
 }
