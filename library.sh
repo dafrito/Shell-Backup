@@ -18,6 +18,10 @@ function all_targets {
     cat $TARGETS | sed -ne '/^[^#\/]/s/[\t ].*$//p'
 }
 
+function all_repos {
+    cat $REPOS | grep -v -e '^[#]' -e '^/\*'
+}
+
 function load_protocol {
 	[ -n "$1" ] || error "Protocol must be specified";
 	local protocol=$1

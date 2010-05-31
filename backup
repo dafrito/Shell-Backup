@@ -31,10 +31,12 @@ ROOT=`readlink -m "$ROOT"`
 mkdir -p "$ROOT/config" || die "$ROOT/config could not be created"
 TARGETS=$ROOT/config/targets
 [ -e $TARGETS ] || touch $TARGETS
+REPOS=$ROOT/config/repos
+[ -e $REPOS ] || touch $REPOS
 
 function run {
 	check_and_lock
-	export BACKUP_EXECUTABLE_DIR DRY_RUN VERBOSE ROOT SESSION TARGETS
+	export BACKUP_EXECUTABLE_DIR DRY_RUN VERBOSE ROOT SESSION TARGETS REPOS
 	case "$*" in
 		-*) true ;;
 		*) 
