@@ -1,17 +1,4 @@
 #!/bin/bash
-if [ ! -d "$BACKUP_EXECUTABLE_DIR" ]; then
-	echo "BACKUP_EXECUTABLE_DIR must be defined"
-	exit 1
-fi
-PATH=/bin:/usr/bin:$BACKUP_EXECUTABLE_DIR
-source "$BACKUP_EXECUTABLE_DIR/library.sh"
-
-function push {
-	if [ "$DRY_RUN" ]; then
-		local dry="--dry-run";
-	fi
-	git push $dry $* 2>&1 || error "Failed to push"
-}
 
 function sync {
 	if [ "$DRY_RUN" ]; then
@@ -24,12 +11,6 @@ function sync {
 	rsync $verbose $dry -ih -rtzR $OS_SPECIFIC --exclude-from ~/.gitignore --exclude '.git/***' $* $path || 
 		error "Failed to sync"
 }
-
-function all_targets {
-	cat $TARGETS | sed -e 's/[\t ].*$//'
-}
-
-trap 'exit $FAILURES' EXIT
 
 function log {
 	[ "$VERBOSE" ] && echo $*
