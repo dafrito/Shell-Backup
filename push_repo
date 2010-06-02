@@ -1,7 +1,4 @@
-#!/bin/bash
-PATH=/bin:/usr/bin
-[ -d "$BACKUP_EXECUTABLE_DIR" ] || BACKUP_EXECUTABLE_DIR=${0%/*}
-source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
+#!/home/dafrito/projects/backup-settings/backup
 
 TARGET_NAME=$1
 [ -n "$TARGET_NAME" ] || error "Target must be provided";
@@ -40,3 +37,5 @@ if ! protocol_repo_exists "$PROJECT_DIR"; then
 fi
 log "Now pushing to `canonical_path`"
 protocol_push_repo "$PROJECT_DIR" 2>&1 || error "failed to push to repository at `canonical_path`"
+
+# vim: set filetype=sh :
