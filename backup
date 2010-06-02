@@ -38,10 +38,15 @@ function run {
 	check_and_lock
 	PATH=$BACKUP_EXECUTABLE_DIR:$ROOT:$PATH
 	export PATH BACKUP_EXECUTABLE_DIR DRY_RUN VERBOSE ROOT SESSION TARGETS REPOS
-	case "$*" in
-		-*) true ;;
+	local cmd=$1
+	shift
+	case "$cmd" in
+		-c)
+			echo "EXECUTING"
+			source <(echo $*)
+			exit
+			;;
 		*) 
-			local cmd="$*"
 			if echo "$cmd" | grep -q '/'; then
 				local path=${cmd%/*}
 				cd $path
@@ -49,7 +54,8 @@ function run {
 			else
 				cd $ROOT
 			fi
-			bash $cmd
+			source $cmd $*
+			exit
 		;;
 	esac
 }
