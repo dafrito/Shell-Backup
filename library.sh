@@ -12,6 +12,15 @@ function sync {
 		error "Failed to sync"
 }
 
+function protocol_default_push {
+	if [ "$DEBUG_LEVEL" -gt 0 ]; then
+		local args="--porcelain"
+	elif [ "$DEBUG_LEVEL" -lt 0 ]; then
+		local args='--quiet'
+	fi
+	git push $args $*
+}
+
 function log_at_level {
 	if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" -ge "$1" ]; then
 		shift

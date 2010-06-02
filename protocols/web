@@ -19,5 +19,5 @@ function protocol_init_repo {
 }
 
 function protocol_push_repo {
-	git push --porcelain `protocol_canonicalize "$*"`
+	protocol_default_push --mirror `protocol_canonicalize "$*"`
 }
