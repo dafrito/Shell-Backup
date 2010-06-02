@@ -1,9 +1,9 @@
 #!/bin/bash
 
 function protocol_init_repo {
-	print "git init to `protocol_canonicalize $*`"
+	print "$PROJECT: git init to `protocol_canonicalize $*`"
 }
 
 function protocol_push_repo {
-	print "git push to `protocol_canonicalize $*`"
+	print "$PROJECT: git push to `protocol_canonicalize $*`"
 }
