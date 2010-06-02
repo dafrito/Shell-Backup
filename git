@@ -24,7 +24,7 @@ function backup_repo {
 		local targets=$1
 		shift
 		local args="$*"
-		eval "cd $path" || exit 1
+		cd `echo $path | sed -e "s%^~%$HOME%"`
 		for target in `echo $targets | sed -e 's/,/ /g'`; do 
 			push_repo $target $args
 		done
