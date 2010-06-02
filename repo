@@ -20,9 +20,8 @@ function backup_repo {
 		IFS=' 	'
 		set -- $repo_data
 		local path=$1
-		shift
-		local targets=$1
-		shift
+		local targets=$2
+		shift 2
 		local args="$*"
 		cd `echo $path | sed -e "s%^~%$HOME%"`
 		for target in `echo $targets | sed -e 's/,/ /g'`; do 
