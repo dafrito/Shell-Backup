@@ -24,7 +24,7 @@ function protocol_load_settings {
 
 function protocol_repo_exists {
 	load_target
-	grep -q -F "$TARGET/$*" $REMOTES
+	grep -Eqe "^$TARGET/$*$" $REMOTES
 }
 
 function protocol_init_repo {
