@@ -1,53 +1,36 @@
-#!/bin/bash
-source ./library.sh || exit 1
+#!/home/dafrito/projects/backup-settings/backup -c
 
-function push_one_to_git {
-	local repo=$1
-	local target=$2
-	log "Pushing $repo to $target"
-	case "$target" in
-		github)
-			case "$repo" in
-				links|backup-settings) true ;; 
-				*) push github 2>&1 || error "Failed to push to github" ;;
-			esac
-		;;
-		unfuddle)
-			case "$repo" in
-				fritomod|riviera) push unfuddle ;;
-			esac
-		;;
-		*)
-			push_repo $target projects $repo || error "Backup failed: $repo"
-		;;
-	esac
-}
-
-function push_to_git {
-	if [ -n "$2" ]; then
-		push_one_to_git $2 $1
-	else
-		cd ~/projects
-		for i in `ls`; do
-			cd $i
-			push_one_to_git $i $1
-			cd ..
-		done
+function backup_repo {
+	[ -n "$1" ] || die "No repository name given"
+	local search="^[^[:space:]]*$1[[:space:]]+"
+	local possibles=`all_repos | grep -m 2 -Ece "$search"`
+	if [ 0 = $possibles ]; then
+		die "No repositories found for '$1'"
+	elif [ 2 = $possibles ]; then
+		local distincts=`all_repos | grep -m 2 -Ee "$search" | sort -bu -k 1,1 | wc -l`
+		if [ $distincts -gt 1 ]; then
+			echo "$distincts distinct repositories found for '$1':"
+			all_repos | grep -m 2 -o -Ee "$search"
+			exit 1
+		fi 
 	fi
+	IFS='
+'
+	for repo_data in `all_repos | grep -Ee "$search"`; do
+		IFS=' 	'
+		set -- $repo_data
+		local path=$1
+		shift
+		local targets=$1
+		shift
+		local args="$*"
+		eval "cd $path" || exit 1
+		for target in `echo $targets | sed -e 's/,/ /g'`; do 
+			push_repo $target $args
+		done
+	done
 }
 
-cmd=${1-all}
-shift
-case "$cmd" in
-	-private) 
-		push_to_git unfuddle
-		for repo in `all_targets`; do
-			push_to_git $repo $*
-		done ;;
-	-public) push_to_git github $* ;;
-	all) 
-		backup git -public $* || error "Failed to push to public repos"
-		backup git -private $* || error "Failed to push to private repos"
-	;;
-	*) push_to_git $cmd $*
-esac
+backup_repo $1
+
+# vim: set filetype=sh :

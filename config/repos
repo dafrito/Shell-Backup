@@ -1,14 +1,13 @@
-/* ex: set ts=8 expandtab: */ 
-~/projects/backup-settings 	private,github
-~/projects/backup 		private,github
-~/projects/db-util 		private,github
-~/projects/flags 		private,github
-~/projects/fm 			private,github
-~/projects/links		private
-~/projects/rfe 			private,github
-~/projects/riviera              private,github,unfuddle
-~/projects/rpchat               private,github
-~/projects/sparks               private,github
-~/projects/trinkets             private,github
-~/projects/tst	                private,github
-~/projects/fritomod             private,github,unfuddle
+~/projects/backup-settings 	private,github		projects
+~/projects/backup		private,github		projects
+~/projects/db-util 		private,github		projects
+~/projects/flags 		private,github		projects
+~/projects/fm 			private,github		projects
+~/projects/links		private			projects
+~/projects/rfe			private,github		projects
+~/projects/riviera              private,github,unfuddle	projects
+~/projects/rpchat               private,github		projects
+~/projects/sparks               private,github		projects
+~/projects/trinkets             private,github		projects
+~/projects/tst	                private,github		projects
+~/projects/fritomod             private,github,unfuddle	projects
