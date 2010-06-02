@@ -42,7 +42,6 @@ function run {
 	shift
 	case "$cmd" in
 		-c)
-			echo "EXECUTING"
 			source <(echo $*)
 			exit
 			;;
