@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function protocol_load_settings {
-	TARGET_DIR=`echo $* | sed -re 's%[[:space:]]+%/%g'`
+	TARGET=`echo $* | sed -re 's%[[:space:]]+%/%g'`
 }
 
 function protocol_repo_exists {
@@ -10,7 +10,7 @@ function protocol_repo_exists {
 }
 
 function protocol_canonicalize {
-	readlink -m $TARGET_DIR/$*
+	readlink -m $TARGET/$*
 }
 
 function protocol_init_repo {
