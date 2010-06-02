@@ -5,7 +5,7 @@ function protocol_load_settings {
 }
 
 function protocol_repo_exists {
-	/usr/bin/git remote | grep -q "^$TARGET_NAME$"
+	git remote | grep -q "^$TARGET_NAME$"
 }
 
 function protocol_canonicalize {
