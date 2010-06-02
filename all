@@ -1,7 +1,6 @@
 #!/bin/bash
-source ./library.sh || exit 1
+#!/home/dafrito/projects/backup-settings/backup
 
-backup ./files || ERR=1
-backup ./git || ERR=1
-
+backup files || ERR=1
+backup repo || ERR=1
 exit $ERR
