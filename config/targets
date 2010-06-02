@@ -1,4 +1,3 @@
-/* ex: set ts=8 expandtab: */ 
 local		local	/home/dafrito/.mirror
 portable	local	/mnt/data
 bluespot	ssh	dafrito.com bluespot /home/bluespot
