@@ -12,17 +12,31 @@ function sync {
 		error "Failed to sync"
 }
 
+function log_at_level {
+	if [ -n "$LOG_LEVEL" ] && [ "$LOG_LEVEL" -ge "$1" ]; then
+		shift
+		echo $*
+	fi
+}
+
+function debug {
+	log_at_level 2 $*
+}
+
 function log {
-	[ "$VERBOSE" ] && echo $*
+	log_at_level 1 $*
+}
+
+function print {
+	log_at_level 0 $*
 }
 
 function error {
 	echo $* 1>&2
-	[ "$TOLERANT" ] || exit 1
+	exit 1
 }
 
 function die {
-	unset TOLERANT
 	error $*
 }
 
@@ -39,7 +53,7 @@ function load_protocol {
 	local protocol=$1
 	[ -f "$BACKUP_EXECUTABLE_DIR/protocols/$protocol" ] || error "Unrecognized protocol: $protocol";
 	source $BACKUP_EXECUTABLE_DIR/protocols/$protocol || error "Protocol failed to load: $protocol"
-	log "Loaded protocol: $protocol"
+	debug "Loaded protocol: $protocol"
 }
 
 # load_target <name> <optional-target-args...>
