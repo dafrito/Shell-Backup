@@ -19,7 +19,7 @@ function backup_repo_by_name {
 	local possibles=`all_repos | grep -m 2 -Ece "$search"`
 	if [ 0 = $possibles ]; then
 		die "No repositories found for '$1'"
-	elif [ 2 = $possibles ]; then
+	elif [ 1 -lt $possibles ]; then
 		local distincts=`all_repos | grep -m 2 -Ee "$search" | sort -bu -k 1,1 | wc -l`
 		if [ $distincts -gt 1 ]; then
 			echo "$distincts distinct repositories found for '$1':"
