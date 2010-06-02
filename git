@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup-settings/backup -c
+#!/home/dafrito/projects/backup-settings/backup
 
 function backup_repo {
 	[ -n "$1" ] || die "No repository name given"
