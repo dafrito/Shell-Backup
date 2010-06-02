@@ -22,8 +22,8 @@ function error {
 }
 
 function die {
+	unset TOLERANT
 	error $*
-	exit 1
 }
 
 function all_targets {
