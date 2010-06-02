@@ -1,19 +1,19 @@
 #!/bin/bash
 
 function protocol_load_settings {
-	TARGET=$1
+	true
 }
 
 function protocol_repo_exists {
-	git remote | grep -qF $TARGET
+	/usr/bin/git remote | grep -q "^$TARGET_NAME$"
 }
 
 function protocol_canonicalize {
-	echo $TARGET
+	echo $TARGET_NAME
 }
 
 function protocol_init_repo {
-	die "Cannot init a remote repository at $TARGET"
+	die "Cannot init a remote repository at $TARGET_NAME"
 	# TODO: It's possible we could run 'git remote add' here, but I don't
 	# like modifying original content unless absolutely necessary.
 }
