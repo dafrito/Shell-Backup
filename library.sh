@@ -42,19 +42,27 @@ function load_protocol {
 	log "Loaded protocol: $protocol"
 }
 
+# load_target <name> <optional-target-args...>
+# corresponds to targets:
+# <target-name> <target-type> <target-args...>
 function load_target {
-	local name=$1
-	local data=`grep "^$name" "$TARGETS"`
-	[ -n "$data" ] || error "Target does not exist: $name" 
+	TARGET_NAME=$1
+	shift
+	[ -n "$TARGET_NAME" ] || die "Target must be provided";
+	local data=`grep "^$TARGET_NAME[[:space:]]" "$TARGETS"`
+	[ -n "$data" ] || die "Target does not exist: $TARGET_NAME" 
+	local args=$*
 	set - $data
 	shift
-	if [ "$1" = "group" ]; then
+	TARGET_TYPE=$1
+	shift
+	if [ "$TARGET_TYPE" = "group" ]; then
 		IFS=','
-		set - $2
+		set - $*
 		GROUP=$*
 	else
-		load_protocol $1
-		protocol_load_settings $* || error "Settings for target '$name' failed to load";
+		load_protocol $TARGET_TYPE
+		protocol_load_settings $* $args || error "Settings for target '$TARGET_NAME' failed to load";
 		[ "$DRY_RUN" ] && load_protocol dry
 	fi
 }

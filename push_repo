@@ -1,9 +1,6 @@
 #!/home/dafrito/projects/backup-settings/backup
 
-TARGET_NAME=$1
-[ -n "$TARGET_NAME" ] || error "Target must be provided";
-
-load_target "$TARGET_NAME"
+load_target $*
 if [ "$GROUP" ]; then
 	shift
 	for target in $GROUP; do
@@ -11,15 +8,7 @@ if [ "$GROUP" ]; then
 	done
 	exit $ERR
 fi
-if [ "$2" ]; then
-	TARGET="$TARGET/$2"
-fi
-if [ "$3" ]; then
-	PROJECT=$3
-else
-	PROJECT=`pwd`
-	PROJECT=${PROJECT##*/}
-fi
+
 
 function canonical_path {
 	protocol_canonicalize "$PROJECT_DIR"
@@ -27,7 +16,9 @@ function canonical_path {
 
 log "Starting push to `canonical_path`"
 set -o pipefail
-PROJECT_DIR="$PROJECT"
+PROJECT_DIR=`pwd`
+PROJECT_DIR=${PROJECT_DIR##*/}
+PROJECT=$PROJECT_DIR
 if ! protocol_repo_exists "$PROJECT_DIR"; then
 	PROJECT_DIR="$PROJECT.git"
 	if ! protocol_repo_exists "$PROJECT_DIR"; then
