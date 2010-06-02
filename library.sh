@@ -13,7 +13,7 @@ function sync {
 }
 
 function log_at_level {
-	if [ -n "$LOG_LEVEL" ] && [ "$LOG_LEVEL" -ge "$1" ]; then
+	if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" -ge "$1" ]; then
 		shift
 		echo $*
 	fi

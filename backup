@@ -3,7 +3,7 @@ PATH=/bin:/usr/bin
 [ -d "$BACKUP_EXECUTABLE_DIR" ] || BACKUP_EXECUTABLE_DIR=${0%/*}
 source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 
-LOG_LEVEL=${LOG_LEVEL-0}
+DEBUG_LEVEL=${DEBUG_LEVEL-0}
 
 while [ "$1" ]; do 
 	cmd=$1
@@ -16,10 +16,10 @@ while [ "$1" ]; do
 			DRY_RUN=true
 			;;
 		-v|--verbose)
-			let LOG_LEVEL++
+			let DEBUG_LEVEL++
 			;;
 		-q|--quiet)
-			let LOG_LEVEL--
+			let DEBUG_LEVEL--
 			;;
 		*)
 			ARGS="$ARGS $1"
@@ -38,7 +38,7 @@ REPOS=$ROOT/config/repos
 function run {
 	check_and_lock
 	PATH=$BACKUP_EXECUTABLE_DIR:$ROOT:$PATH
-	export PATH BACKUP_EXECUTABLE_DIR DRY_RUN LOG_LEVEL ROOT SESSION TARGETS REPOS
+	export PATH BACKUP_EXECUTABLE_DIR DRY_RUN DEBUG_LEVEL ROOT SESSION TARGETS REPOS
 	local cmd=$1
 	shift
 	case "$cmd" in
