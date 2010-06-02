@@ -46,13 +46,6 @@ function run {
 			exit
 			;;
 		*) 
-			if echo "$cmd" | grep -q '/'; then
-				local path=${cmd%/*}
-				cd $path
-				cmd=${cmd##*/}
-			else
-				cd $ROOT
-			fi
 			source $cmd $*
 			exit
 		;;
