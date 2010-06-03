@@ -24,7 +24,7 @@ function protocol_default_push {
 	[ "$DEBUG_LEVEL" -gt 1 ] && args="$args --verbose"
 	[ "$DEBUG_LEVEL" -gt 0 ] && args="$args --porcelain"
 	[ "$DEBUG_LEVEL" -lt 0 ] && args="$args --quiet"
-	git push $args $* >$TMP/push 2>&1  
+	git push $* $args >$TMP/push 2>&1  
 	local R=$?
 	if [ $R != 0 ]; then
 		cat $TMP/push | sed -e "s/^/$PROJECT: /g" 1>&2
