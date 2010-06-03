@@ -42,7 +42,6 @@ function backup_repo_by_name {
 		backup_one_repo $*
 
 	done
-	return $ERR
 }
 
 function backup_repo_by_target {
@@ -81,4 +80,5 @@ else
 	backup_all_repos
 fi
 
+exit $ERR
 # vim: set filetype=sh :
