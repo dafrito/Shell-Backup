@@ -37,11 +37,10 @@ function backup_repo_by_name {
 	IFS='
 '
 	for repo_data in `all_repos | grep -Ee "$search"`; do
-		IFS=' 	'
+		unset IFS
 		set - $repo_data
-		IFS='
-'
 		backup_one_repo $*
+
 	done
 	return $ERR
 }
