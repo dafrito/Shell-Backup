@@ -37,7 +37,11 @@ function protocol_default_push {
 function log_at_level {
 	if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" -ge "$1" ]; then
 		shift
-		echo $*
+		if [ "$PROJECT" ]; then
+			echo "$PROJECT: $*"
+		else
+			echo "$*"
+		fi
 	fi
 }
 
@@ -54,12 +58,16 @@ function print {
 }
 
 function error {
-	echo $* 1>&2
+	if [ "$PROJECT" ]; then
+		echo "$PROJECT: $*" 1>&2
+	else
+		echo "$*" 1>&2
+	fi
 	exit 1
 }
 
 function die {
-	error $*
+	error "fatal: $*"
 }
 
 function all_targets {
