@@ -13,7 +13,7 @@ function protocol_canonicalize {
 }
 
 function protocol_init_repo {
-	die "Cannot init a remote repository at $TARGET_NAME"
+	die "'web' protocol does not support creating remote repositories. Target was '$TARGET_NAME'"
 	# TODO: It's possible we could run 'git remote add' here, but I don't
 	# like modifying original content unless absolutely necessary.
 }
