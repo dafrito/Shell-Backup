@@ -3,7 +3,3 @@
 function protocol_init_repo {
 	print "$PROJECT: git init to `protocol_canonicalize $*`"
 }
-
-function protocol_push_repo {
-	print "$PROJECT: git push to `protocol_canonicalize $*`"
-}

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ ! "$TMP" ]; then
+	TMP=/tmp/backup.$$
+	mkdir $TMP || exit 1
+	trap 'rm -rf $TMP' EXIT
+fi
+
 function sync {
 	if [ "$DRY_RUN" ]; then
 		local dry="--dry-run";
@@ -13,12 +19,19 @@ function sync {
 }
 
 function protocol_default_push {
-	if [ "$DEBUG_LEVEL" -gt 0 ]; then
-		local args="--porcelain"
-	elif [ "$DEBUG_LEVEL" -lt 0 ]; then
-		local args='--quiet'
+	local args=""
+	[ "$DRY_RUN" ] && args="$args --dry-run"
+	[ "$DEBUG_LEVEL" -gt 1 ] && args="$args --verbose"
+	[ "$DEBUG_LEVEL" -gt 0 ] && args="$args --porcelain"
+	[ "$DEBUG_LEVEL" -lt 0 ] && args="$args --quiet"
+	git push $args $* >$TMP/push 2>&1  
+	local R=$?
+	if [ $R != 0 ]; then
+		cat $TMP/push | sed -e "s/^/$PROJECT: /g" 1>&2
+	elif [ $DEBUG_LEVEL -gt 0 ]; then
+		cat $TMP/push | sed -e "s/^/$PROJECT: /g"
 	fi
-	git push $args $*
+	return $R
 }
 
 function log_at_level {
@@ -116,6 +129,8 @@ function check_and_lock {
 	fi
 	SESSION=$ROOT/session
 	mkdir -p $SESSION || die "Could not create session"
+	mv $TMP $SESSION/tmp
+	TMP=$SESSION/tmp
 	trap "rm -rf '$SESSION'" EXIT
 	echo $$ >$SESSION/lock
 }
