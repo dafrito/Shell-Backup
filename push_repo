@@ -18,16 +18,16 @@ PROJECT_DIR=`pwd`
 PROJECT_DIR=${PROJECT_DIR##*/}
 PROJECT=$PROJECT_DIR
 [ -n $PROJECT ] || die "Project must be defined"
-log "$PROJECT: Starting push to `canonical_path`"
+log "Starting push to `canonical_path`"
 set -o pipefail
 if ! protocol_repo_exists "$PROJECT_DIR"; then
 	PROJECT_DIR="$PROJECT.git"
 	if ! protocol_repo_exists "$PROJECT_DIR"; then
-		log "$PROJECT: Creating new repository at `canonical_path`"
+		log "Creating new repository at `canonical_path`"
 		protocol_init_repo "$PROJECT_DIR" 2>&1 || error "failed to create repository at `canonical_path`"
 	fi
 fi
-log "$PROJECT: Now pushing to `canonical_path`"
+log "Now pushing to `canonical_path`"
 protocol_push_repo "$PROJECT_DIR" 2>&1 || error "failed to push to repository at `canonical_path`"
 
 # vim: set filetype=sh :
