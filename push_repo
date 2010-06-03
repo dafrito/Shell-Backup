@@ -28,6 +28,10 @@ if ! protocol_repo_exists "$PROJECT_DIR"; then
 	fi
 fi
 log "Now pushing to `canonical_path`"
-protocol_push_repo "$PROJECT_DIR" 2>&1 || error "failed to push to repository at `canonical_path`"
+if [ "$DRY_RUN" ] && ! protocol_repo_exists "$PROJECT_DIR"; then
+	print "Pushing to new repository at `canonical_path`"
+else
+	protocol_push_repo "$PROJECT_DIR" 2>&1 || error "failed to push to repository at `canonical_path`"
+fi
 
 # vim: set filetype=sh :
