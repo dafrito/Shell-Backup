@@ -30,6 +30,10 @@ function protocol_default_push {
 		cat $TMP/push | sed -e "s/^/$PROJECT: /g" 1>&2
 	elif [ $DEBUG_LEVEL -gt 0 ]; then
 		cat $TMP/push | sed -e "s/^/$PROJECT: /g"
+	elif [ $DEBUG_LEVEL -eq 0 ]; then
+		if [ `wc -l $TMP/push | cut -f1 -d' '` -gt 1 ]; then
+			cat $TMP/push | sed -e "s/^/$PROJECT: /g"
+		fi
 	fi
 	return $R
 }
