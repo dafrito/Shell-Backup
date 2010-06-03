@@ -1,5 +1,5 @@
 #!/bin/bash
 
 function protocol_init_repo {
-	print "$PROJECT: git init to `protocol_canonicalize $*`"
+	print "git init to `protocol_canonicalize $*`"
 }
