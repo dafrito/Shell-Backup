@@ -75,7 +75,7 @@ function backup_all_repos {
 
 if [ "$1" ]; then
 	case "$1" in
-		-t) backup_repo_by_target $2 ;;
+		-t|--target) backup_repo_by_target $2 ;;
 		*) backup_repo_by_name $1 ;;
 	esac
 else
