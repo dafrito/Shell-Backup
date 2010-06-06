@@ -1,6 +1,6 @@
 local		local	/home/dafrito/.mirror
-portable	local	/media/maxtor
-bluespot	ssh	dafrito.com bluespot /home/bluespot
+portable	local	/media/maxtor						windows
+bluespot	ssh		dafrito.com bluespot /home/bluespot
 github		web
 unfuddle	web
 private		group	local,portable,bluespot
