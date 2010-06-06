@@ -30,11 +30,13 @@ done
 ROOT=${ROOT-$HOME/.backup}
 ROOT=`readlink -m "$ROOT"`
 [ ! -d "$ROOT" ] || die "$ROOT does not exist or is not a directory"
+CONFIG=${CONFIG-$ROOT/config}
+[ ! -d "$CONFIG" ] || die "$CONFIG does not exist or is not a directory"
 
 function run {
 	check_and_lock
 	PATH=$BACKUP_EXECUTABLE_DIR:$ROOT:$PATH
-	export PATH BACKUP_EXECUTABLE_DIR DRY_RUN DEBUG_LEVEL ROOT SESSION
+	export PATH BACKUP_EXECUTABLE_DIR DRY_RUN DEBUG_LEVEL ROOT SESSION CONFIG
 	local cmd=$1
 	shift
 	case "$cmd" in

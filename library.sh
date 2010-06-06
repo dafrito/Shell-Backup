@@ -75,15 +75,15 @@ function die {
 }
 
 function all_syncs {
-    cat $ROOT/syncs | grep -v -e '^[#]' -e '^/\*'
+    cat $CONFIG/syncs | grep -v -e '^[#]' -e '^/\*'
 }
 
 function all_targets {
-    cat $ROOT/targets | sed -ne '/^[^#\/]/s/[\t ].*$//p'
+    cat $CONFIG/targets | sed -ne '/^[^#\/]/s/[\t ].*$//p'
 }
 
 function all_repos {
-    cat $ROOT/repos | grep -v -e '^[#]' -e '^/\*'
+    cat $CONFIG/repos | grep -v -e '^[#]' -e '^/\*'
 }
 
 function load_protocol {
@@ -101,7 +101,7 @@ function load_target {
 	TARGET_NAME=$1
 	shift
 	[ -n "$TARGET_NAME" ] || die "Target must be provided";
-	local data=`grep "^$TARGET_NAME[[:space:]]" "$ROOT/targets"`
+	local data=`grep "^$TARGET_NAME[[:space:]]" "$CONFIG/targets"`
 	[ -n "$data" ] || die "Target does not exist: $TARGET_NAME" 
 	local args=$*
 	set - $data
