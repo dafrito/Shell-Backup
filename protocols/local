@@ -1,7 +1,9 @@
 #!/bin/bash
 
 function protocol_load_settings {
-	TARGET=`echo $* | sed -re 's%[[:space:]]+%/%g'`
+	TARGET=`echo $1 | sed -re 's%[[:space:]]+%/%g'`
+	shift
+	protocol_load_global_args $*
 }
 
 function protocol_repo_exists {

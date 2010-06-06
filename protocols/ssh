@@ -19,7 +19,9 @@ function protocol_load_settings {
 	SSH_URL=${1?"URL must be given for $TARGET_NAME"};
 	SSH_USERNAME=${2?"username must be given for $TARGET_NAME"};
 	shift 2
-	TARGET=`echo $* | sed -re 's%[[:space:]]+%/%g'`
+	TARGET=`echo $1 | sed -re 's%[[:space:]]+%/%g'`
+	shift
+	protocol_load_global_args $*
 }
 
 function protocol_repo_exists {

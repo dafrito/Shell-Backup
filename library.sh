@@ -38,6 +38,15 @@ function protocol_default_push {
 	return $R
 }
 
+function protocol_load_global_args {
+	while "$1"; do
+		case "$1" in
+			windows) WINDOWS=true ;;
+		esac
+		shift
+	done
+}
+
 function log_at_level {
 	if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" -ge "$1" ]; then
 		shift
