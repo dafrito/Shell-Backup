@@ -29,16 +29,12 @@ done
 
 ROOT=${ROOT-$HOME/.backup}
 ROOT=`readlink -m "$ROOT"`
-mkdir -p "$ROOT/config" || die "$ROOT/config could not be created"
-TARGETS=$ROOT/config/targets
-[ -e $TARGETS ] || touch $TARGETS
-REPOS=$ROOT/config/repos
-[ -e $REPOS ] || touch $REPOS
+[ ! -d "$ROOT" ] || die "$ROOT does not exist or is not a directory"
 
 function run {
 	check_and_lock
 	PATH=$BACKUP_EXECUTABLE_DIR:$ROOT:$PATH
-	export PATH BACKUP_EXECUTABLE_DIR DRY_RUN DEBUG_LEVEL ROOT SESSION TARGETS REPOS
+	export PATH BACKUP_EXECUTABLE_DIR DRY_RUN DEBUG_LEVEL ROOT SESSION
 	local cmd=$1
 	shift
 	case "$cmd" in

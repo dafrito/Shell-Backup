@@ -74,12 +74,16 @@ function die {
 	error "fatal: $*"
 }
 
+function all_syncs {
+    cat $ROOT/syncs | grep -v -e '^[#]' -e '^/\*'
+}
+
 function all_targets {
-    cat $TARGETS | sed -ne '/^[^#\/]/s/[\t ].*$//p'
+    cat $ROOT/targets | sed -ne '/^[^#\/]/s/[\t ].*$//p'
 }
 
 function all_repos {
-    cat $REPOS | grep -v -e '^[#]' -e '^/\*'
+    cat $ROOT/repos | grep -v -e '^[#]' -e '^/\*'
 }
 
 function load_protocol {
@@ -97,7 +101,7 @@ function load_target {
 	TARGET_NAME=$1
 	shift
 	[ -n "$TARGET_NAME" ] || die "Target must be provided";
-	local data=`grep "^$TARGET_NAME[[:space:]]" "$TARGETS"`
+	local data=`grep "^$TARGET_NAME[[:space:]]" "$ROOT/targets"`
 	[ -n "$data" ] || die "Target does not exist: $TARGET_NAME" 
 	local args=$*
 	set - $data
