@@ -1,5 +1,4 @@
-#!/bin/bash
-source ./library.sh || exit 1
+#!/home/dafrito/projects/backup-settings/backup
 
 function sync_to_target {
 	target=$1
@@ -28,4 +27,6 @@ else
 		backup files $target || ERR=1
 	done
 fi
+
 exit $ERR
+# vim: set filetype=sh :
