@@ -1,0 +1,51 @@
+#!/home/dafrito/projects/backup-settings/backup
+
+while "$1"; do
+	case "$1" in
+		-*) 
+			if [ -n "$files" ]; then
+				sync_args="$sync_args $1"
+			else
+				target_args="$target_args $1" ;;
+			fi
+		*) 
+			if [ "$target" ]; then
+				files="$files $1"
+				[ -e $1 ] || die "File does not exist: $1"
+			else
+				target=$1
+			fi ;;
+	esac
+	shift
+done
+
+[ "$target" ] || die "Target was not provided"
+if [ ! "$files" ]; then
+	files=`cat - | xargs echo`
+fi
+
+load_target $target $target_args || die "Target could not be loaded: $target $target_args"
+if [ "$GROUP" ]; then
+	shift
+	for target in $GROUP; do
+		sync_files $target $target_args $files $sync_args || ERR=1
+	done
+	exit $ERR
+fi
+
+function canonical_path {
+	protocol_canonicalize "$PROJECT_DIR"
+}
+
+log "Starting sync to `canonical_path`"
+if [ "$DRY_RUN" ]; then
+	sync_args="--dry-run $sync_args"
+fi
+if [ "$WINDOWS" ]; then
+	sync_args="-L $sync_args"
+else
+	sync_args="-pl $sync_args"
+fi
+rsync -ih -rtzR --exclude-from ~/.gitignore --exclude '.git/***' $sync_args $files `canonical_path`
+
+# vim: set filetype=sh :

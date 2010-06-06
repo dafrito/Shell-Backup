@@ -6,18 +6,6 @@ if [ ! "$TMP" ]; then
 	trap 'rm -rf $TMP' EXIT
 fi
 
-function sync {
-	if [ "$DRY_RUN" ]; then
-		local dry="--dry-run";
-	fi
-	local OS_SPECIFIC="-pl"
-	if [ "$WINDOWS" ]; then
-		OS_SPECIFIC="-L"
-	fi
-	rsync $verbose $dry -ih -rtzR $OS_SPECIFIC --exclude-from ~/.gitignore --exclude '.git/***' $* $path || 
-		error "Failed to sync"
-}
-
 function protocol_default_push {
 	local args=""
 	[ "$DRY_RUN" ] && args="$args --dry-run"
