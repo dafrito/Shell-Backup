@@ -27,7 +27,7 @@ function protocol_default_push {
 }
 
 function protocol_load_global_args {
-	while "$1"; do
+	while [ "$1" ]; do
 		case "$1" in
 			windows) WINDOWS=true ;;
 		esac
