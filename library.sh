@@ -95,6 +95,13 @@ function load_protocol {
 # corresponds to targets:
 # <target-name> <target-type> <target-args...>
 function load_target {
+	if echo $1 | grep -q ","; then
+		TARGET_TYPE="group"
+		IFS=','
+		set - $1
+		GROUP=$*
+		return
+	fi
 	TARGET_NAME=$1
 	shift
 	[ -n "$TARGET_NAME" ] || die "Target must be provided";
