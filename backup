@@ -29,9 +29,9 @@ done
 
 ROOT=${ROOT-$HOME/.backup}
 ROOT=`readlink -m "$ROOT"`
-[ ! -d "$ROOT" ] || die "$ROOT does not exist or is not a directory"
+[ -d "$ROOT" ] || die "$ROOT does not exist or is not a directory"
 CONFIG=${CONFIG-$ROOT/config}
-[ ! -d "$CONFIG" ] || die "$CONFIG does not exist or is not a directory"
+[ -d "$CONFIG" ] || die "$CONFIG does not exist or is not a directory"
 
 function run {
 	check_and_lock
