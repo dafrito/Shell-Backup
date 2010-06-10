@@ -1,0 +1,55 @@
+#!/home/dafrito/projects/backup-settings/backup
+
+mkdir -p $SESSION/sync
+touch $SESSION/sync/staged
+
+cd ~
+
+function add_file {
+	if [ -n "$files" ]; then
+		files="$files
+$*"
+	else
+		files="$*"
+	fi
+
+}
+
+while [ "$1" ]; do
+	case "$1" in
+		--tolerant) TOLERANT=true ;;
+		-f) 
+			shift
+			if [ "$1" = "-" ]; then
+				add_file `cat -`
+			else
+				[ -f $1 ] || die "Listfile does not exist: $1"
+				add_file $(<$1) 
+			fi ;;
+		*) add_file $1 ;;
+	esac
+	shift
+done
+
+if [ ! "$files" ]; then
+	IFS='
+'
+	while read file; do
+		add_file $file
+	done
+	IFS=' 	
+'
+fi
+
+[ -n "$files" ] || die "No files provided"
+
+for f in $files; do
+	if [ ! -e "$f" ]; then
+		[ "$TOLERANT" ] || die "File does not exist: $f"
+		ERR=1
+	fi
+done
+echo "$files" >>$SESSION/sync/staged
+
+exit $ERR
+# vim: set filetype=sh :

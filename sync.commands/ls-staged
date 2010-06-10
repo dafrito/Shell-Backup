@@ -1,0 +1,3 @@
+#!/home/dafrito/projects/backup-settings/backup
+[ -f $SESSION/sync/staged ] && cat $SESSION/sync/staged
+# vim: set filetype=sh :

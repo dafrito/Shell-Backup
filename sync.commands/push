@@ -1,0 +1,50 @@
+#!/home/dafrito/projects/backup-settings/backup
+
+[ "$SESSION" ] || die "sync push must be ran under a backup session"
+[ -s "$SESSION/sync/staged" ] || die "No files were staged"
+
+cd ~
+
+target=
+target_args=
+sync_args=
+
+[ -s $CONFIG/rsync.args ] && sync_args=$(<$CONFIG/rsync.args)
+
+while [ "$1" ]; do
+	case "$1" in
+		--keep) KEEP=true ;;
+		-arg|--arg|-args|--args) shift; target_args="$target_args $1" ;; 
+		*) 
+			if [ ! -n "$target" ]; then
+				target="$1"
+			else
+				sync_args="$sync_args $1"
+			fi ;;
+	esac
+	shift
+done
+
+[ "$target" ] || die "Target was not provided"
+load_target $target $target_args || die "Target could not be loaded: $target $target_args"
+if [ "$GROUP" ]; then
+	shift
+	for target in $GROUP; do
+		sync push $target $target_args $sync_args || ERR=1
+	done
+	exit $ERR
+fi
+
+log "Starting sync to `protocol_canonicalize`"
+if [ "$DRY_RUN" ]; then
+	sync_args="--dry-run $sync_args"
+fi
+if [ "$WINDOWS" ]; then
+	sync_args="-L $sync_args"
+else
+	sync_args="-pl $sync_args"
+fi
+rsync -ih -rtzR --exclude-from ~/.gitignore --exclude '.git/***' $sync_args `cat $SESSION/sync/staged | xargs echo` `protocol_canonicalize` || exit 1
+[ "$KEEP" ] || rm $SESSION/sync/staged
+
+# vim: set filetype=sh :
