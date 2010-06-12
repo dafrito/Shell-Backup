@@ -3,16 +3,41 @@
 mkdir -p $SESSION/sync
 touch $SESSION/sync/staged
 
-cd ~
+resolve_dir() {
+	local current_dir=`readlink -e .`
+	if [ -e $SESSION/sync/root.dir ]; then
+		root_dir=`cat $SESSION/sync/root.dir`
+		[ ${current_dir:0:${#root_dir}} = "$root_dir" ] || die "`pwd` is not a subdirectory of $root_dir"
+	else
+		echo "$current_dir" >$SESSION/sync/root.dir
+		root_dir=$current_dir
+	fi
+}
+resolve_dir
 
 function add_file {
-	if [ -n "$files" ]; then
-		files="$files
-$*"
-	else
-		files="$*"
-	fi
-
+	for f; do
+		if echo $f | grep -qe '/$'; then
+			local has_trailing_slash=true
+		fi
+		f=`readlink -e $f`
+		debug "File: " $f
+		debug "Root location: " $root_dir
+		if [ "$f" = "$root_dir" ]; then
+			f="."
+		else
+			f=${f:$((1+${#root_dir}))}
+		fi
+		if [ $has_trailing_slash ]; then
+			f="$f/"
+		fi
+		if [ -n "$files" ]; then
+			files="$files
+$f"
+		else
+			files="$f"
+		fi
+	done
 }
 
 while [ "$1" ]; do
@@ -43,6 +68,7 @@ fi
 
 [ -n "$files" ] || die "No files provided"
 
+cd $root_dir
 for f in $files; do
 	if [ ! -e "$f" ]; then
 		[ "$TOLERANT" ] || die "File does not exist: $f"
