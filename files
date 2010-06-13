@@ -1,42 +1,27 @@
 #!/home/dafrito/projects/backup-settings/backup
 
-function sync_to_target {
-	target=$1
+function stage_files {
+	local files=${1?"File location or files must be specified"}
+	if echo $files | grep -q '/'; then
+		sync stage $files
+	else
+		files="$CONFIG/files.d/$files"
+		[ -f $files ] || die "File does not exist or is not a file: $files"
+		if [ -x $files ]; then
+			source $files || die "$files failed"
+		else
+			sync stage -f $files
+		fi
+	fi
+}
+
+function push_to_target {
+	local targets=$1
 	shift
-	echo "Syncing files with $target"
-	path=`make_path "$target"`
-	[ -n "$path" ] || die "No path found for target: $target"
-	echo "Destination: $path"
-	cd ~
-	if [ "$target" = "portable" ]; then
-		WINDOWS=true
-	fi
-	sync $* `cat $ROOT/config/environment`
-	sync $* .ssh --exclude=id_rsa
-	if [ "$target" = "bluespot" ]; then
-		path="$path/home/dafrito"
-	fi
-	sync $* --delete --max-delete=10 `cat $ROOT/config/user`
-}
-
-function backup_one {
-	local path=$1
-	local targets=$2
-	shift 2
 	local args="$*"
-	cd `echo $path | sed -e "s%^~%$HOME%"`
 	for target in `echo $targets | sed -e 's/,/ /g'`; do 
-		push_repo $target $args || ERR=1
+		sync push $target $args || ERR=1
 	done
-}
-
-function backup_to_target {
-	local target=$1
-	local path=$2
-	shift 2
-	local args="$*"
-	cd `echo $path | sed -e "s%^~%$HOME%"`
-	push_repo $target $args || ERR=1
 }
 
 function backup_by_name {
@@ -49,7 +34,9 @@ function backup_by_name {
 		found=true
 		unset IFS
 		set - $sync_data
-		backup_one $*
+		files=$1
+		shift
+		stage_files $files && push_to_target $* || die "Failed to stage files"
 	done
 	if [ ! "$found" ]; then
 		die "No syncs found for '$1'"
@@ -63,21 +50,13 @@ function backup_by_target {
 	for sync_data in `all_syncs`; do
 		IFS=' 	'
 		set -- $sync_data
-		if echo "$2" | sed -e 's/,/\n/g' | grep -q "^$target$"; then
-			backup_to_target $target $*
+		local files="$1"
+		local targets="$2"
+		shift 2
+		if echo "$targets" | sed -e 's/,/\n/g' | grep -q "^$target$"; then
+			stage_files $files &&
+			push_to_target $target $* || ERR=1
 		fi
-		IFS='
-'
-	done
-}
-
-function backup_all {
-	IFS='
-'
-	for sync_data in `all_syncs`; do
-		IFS=' 	'
-		set -- $sync_data
-		backup_one $*
 		IFS='
 '
 	done
@@ -89,7 +68,7 @@ if [ "$1" ]; then
 		*) backup_by_name $1 ;;
 	esac
 else
-	backup_all
+	backup_by_name '[^[:space:]]+'
 fi
 
 exit $ERR
