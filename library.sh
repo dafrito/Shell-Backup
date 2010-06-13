@@ -138,7 +138,7 @@ function load_target_name {
 # <target-name> <target-type> <target-args...>
 function load_target {
 	if echo $1 | grep -q ","; then
-		populate_group $*
+		populate_group $1
 		return
 	fi
 	if echo $1 | grep -q '|'; then
