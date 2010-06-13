@@ -11,11 +11,9 @@ function add_file {
 			local has_trailing_slash=true
 		fi
 		f=`echo $f | sed -e "s%~%$HOME%g"`
-		f=`readlink -e $f` || die "readlink could not read $orig_f"
-		debug "physical location: " $f
 		if echo $f | grep -qe '^/'; then
 			true
-		else
+		elif echo $f | grep -qe '/'; then
 			f=`sync root-dir --resolve $f` || exit 1
 		fi
 		if [ $has_trailing_slash ]; then
