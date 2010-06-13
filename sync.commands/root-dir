@@ -16,7 +16,7 @@ cmd=$1
 shift
 if [ "$cmd" ]; then
 	case "$cmd" in
-		--check) has_root_dir && exit ;;
+		--check|--test) has_root_dir && exit ;;
 		--set)
 			check_for_staged
 			echo $* >$SESSION/sync/root.dir
