@@ -6,8 +6,7 @@ source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 DEBUG_LEVEL=${DEBUG_LEVEL-0}
 
 while [ "$1" ]; do 
-	cmd=$1
-	case "$cmd" in 
+	case "$1" in 
 		-s|--settings)
 			shift
 			ROOT=$1
