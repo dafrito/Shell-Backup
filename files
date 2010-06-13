@@ -29,6 +29,7 @@ function push_to_target {
 
 function backup_by_name {
 	[ -n "$1" ] || die "No sync name given"
+	debug "Syncing files with name: $1"
 	local found=
 	local search="^[[:space:]]*$1[[:space:]]+"
 	IFS='
