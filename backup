@@ -15,6 +15,10 @@ while [ "$1" ]; do
 			-c) cmd="RUN" ;;
 			-s|--settings)
 				shift
+				CONFIG=$1
+				;;
+			-r|--root)
+				shift
 				ROOT=$1
 				;;
 			-n|--dry-run)
