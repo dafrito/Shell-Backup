@@ -68,7 +68,7 @@ fi
 
 [ -n "$files" ] || die "No files provided"
 
-cd `sync root-dir`
+sync root-dir --test && cd `sync root-dir`
 for f in $files; do
 	if [ ! -e "$f" ]; then
 		[ "$TOLERANT" ] || die "File does not exist: $f"
