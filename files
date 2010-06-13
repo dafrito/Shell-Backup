@@ -10,6 +10,7 @@ function stage_files {
 		if [ -x $files ]; then
 			source $files || die "$files failed"
 		else
+			cd ~
 			sync stage -f $files
 		fi
 	fi
