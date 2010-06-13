@@ -13,6 +13,7 @@ function stage_files {
 			sync stage -f $files
 		fi
 	fi
+	sync ls-staged -q || die "No files were staged"
 }
 
 function push_to_target {
