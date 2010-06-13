@@ -74,6 +74,7 @@ done
 if [ ! "$files" ]; then
 	IFS='
 '
+	debug "Reading files from stdin"
 	while read file; do
 		add_file $file
 	done
