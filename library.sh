@@ -29,7 +29,7 @@ function protocol_default_push {
 function protocol_load_global_args {
 	while [ "$1" ]; do
 		case "$1" in
-			windows) debug "'$TARGET_NAME' is a windows location"; WINDOWS=true ;;
+			-windows) debug "'$TARGET_NAME' is a windows location"; WINDOWS=true ;;
 		esac
 		shift
 	done
