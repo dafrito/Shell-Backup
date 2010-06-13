@@ -159,10 +159,7 @@ function load_target {
 		populate_group $*
 	else
 		load_protocol $TARGET_TYPE
-		protocol_load_settings $* $args || error "Settings for target '$TARGET_NAME' failed to load";
-		if [ "$INLINE_TARGET_PATH" ]; then
-			TARGET="$TARGET/$INLINE_TARGET_PATH"
-		fi
+		protocol_load_settings $* $args $INLINE_TARGET_PATH || error "Settings for target '$TARGET_NAME' failed to load";
 		[ "$DRY_RUN" ] && load_protocol dry
 	fi
 	return 0
