@@ -58,8 +58,7 @@ function backup_by_target {
 		local targets="$2"
 		shift 2
 		if echo "$targets" | sed -e 's/,/\n/g' | grep -q "^$target$"; then
-			stage_files $files &&
-			push_to_target $target $* || ERR=1
+			stage_files $files && push_to_target $target $* || ERR=1
 		fi
 		IFS='
 '
