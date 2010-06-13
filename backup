@@ -36,10 +36,10 @@ while [ "$1" ]; do
 done
 [ -n "$cmd" ] || die "No command was recognized"
 
-ROOT=${ROOT-$HOME/.backup}
+ROOT=${ROOT-$BACKUP_EXECUTABLE_DIR}
 ROOT=`readlink -m "$ROOT"`
 [ -d "$ROOT" ] || die "$ROOT does not exist or is not a directory"
-CONFIG=${CONFIG-$ROOT/config}
+CONFIG=${CONFIG-$HOME/.backup}
 [ -d "$CONFIG" ] || die "$CONFIG does not exist or is not a directory"
 
 function run {
