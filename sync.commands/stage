@@ -1,6 +1,5 @@
 #!/home/dafrito/projects/backup-settings/backup
 
-mkdir -p $SESSION/sync
 touch $SESSION/sync/staged
 
 function add_file {

@@ -4,6 +4,7 @@ cmd=$1
 shift
 [ "$cmd" ] || die "sync: no command specified"
 [ -x "$BACKUP_EXECUTABLE_DIR/sync.commands/$cmd" ] || die "sync: command not found: $cmd"
+mkdir -p $SESSION/sync
 "$BACKUP_EXECUTABLE_DIR/sync.commands/$cmd" $*
 
 # vim: set filetype=sh :
