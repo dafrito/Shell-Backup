@@ -1,4 +1,0 @@
-environment	private
-~/.ssh		private				--exclude=id_rsa
-user		private|bluespot		--delete --max-delete=10
-user		bluespot:home/dafrito		--delete --max-delete=10
