@@ -1,0 +1,56 @@
+#!/home/dafrito/projects/backup-settings/backup
+
+function get_root_dir {
+	cat $SESSION/sync/root.dir
+}
+
+function has_root_dir {
+	[ -f $SESSION/sync/root.dir ]
+}
+
+function check_for_staged {
+	! sync ls-staged -q || die "Cannot modify root-dir when files are staged"
+}
+
+cmd=$1
+shift
+if [ "$cmd" ]; then
+	case "$cmd" in
+		--check) has_root_dir && exit ;;
+		--set)
+			check_for_staged
+			echo $* >$SESSION/sync/root.dir
+			;;
+		--resolve)
+			if [ "$#" ]; then
+				f="$*"
+			else
+				f=`pwd`
+			fi
+			if has_root_dir; then
+				root_dir=`get_root_dir`
+				[ ${f:0:${#root_dir}} = "$root_dir" ] || 
+				die "$f is not a subdirectory of $root_dir"
+				if [ "$f" = "$root_dir" ]; then
+					f="."
+				else
+					f=${f:$((1+${#root_dir}))}
+				fi
+			else
+				sync root-dir --set $f
+			fi
+			echo $f
+			;;
+		--clear) 
+			check_for_staged
+			rm -f $SESSION/sync/root.dir
+			;;
+		*) die "Unsupported command: $1" ;;
+	esac
+else
+	[ -f $SESSION/sync/root.dir ] && 
+	cat $SESSION/sync/root.dir ||
+	die "root.dir does not exist or could not be read" ;;
+fi
+
+# vim: set filetype=sh :
