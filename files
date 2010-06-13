@@ -16,6 +16,8 @@ function stage_files {
 		fi
 	fi
 	sync ls-staged -q || die "No files were staged"
+	log "`sync ls-staged -n` file(s) staged"
+	sync ls-staged | log
 }
 
 function push_to_target {
