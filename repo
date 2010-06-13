@@ -77,7 +77,7 @@ if [ "$1" ]; then
 		*) backup_by_name $1 ;;
 	esac
 else
-	backup_all_repos
+	backup_all
 fi
 
 exit $ERR
