@@ -5,26 +5,36 @@ source $BACKUP_EXECUTABLE_DIR/library.sh || exit 1
 
 DEBUG_LEVEL=${DEBUG_LEVEL-0}
 
+cmd=
 while [ "$1" ]; do 
-	case "$1" in 
-		-s|--settings)
-			shift
-			ROOT=$1
-			;;
-		-n|--dry-run)
-			DRY_RUN=true
-			;;
-		-v|--verbose)
-			let DEBUG_LEVEL++
-			;;
-		-q|--quiet)
-			let DEBUG_LEVEL--
-			;;
-		*)
-			ARGS="$ARGS $1"
-	esac
+	if [ "$cmd" ]; then
+		ARGS="$ARGS $1"
+	else
+		case "$1" in 
+			-lock|--lock) cmd="LOCK" ;;
+			-c) cmd="RUN" ;;
+			-s|--settings)
+				shift
+				ROOT=$1
+				;;
+			-n|--dry-run)
+				DRY_RUN=true
+				;;
+			-v|--verbose)
+				let DEBUG_LEVEL++
+				;;
+			-q|--quiet)
+				let DEBUG_LEVEL--
+				;;
+			-*) die "Unrecognized parameter: $1" ;;
+			*)
+				cmd="RUN"
+				ARGS="$1"
+		esac
+	fi
 	shift
 done
+[ -n "$cmd" ] || die "No command was recognized"
 
 ROOT=${ROOT-$HOME/.backup}
 ROOT=`readlink -m "$ROOT"`
@@ -50,17 +60,13 @@ function run {
 	esac
 }
 
-set - $ARGS
-cmd=$1
-[ -n "$cmd" ] || die "No command given"
 case "$cmd" in 
-	-lock|--lock)
+	LOCK)
 		check_and_lock
 		echo "All backups are locked; delete $SESSION/lock to unlock." 1>&2
 		echo Backup has been explicitly locked. Delete this file to unlock. >$SESSION/lock
 		trap '' EXIT
 		exit ;;
-	-c) run $* ;;
-	-*) die "Unrecognized command: $1" ;;
-	*) run $* ;;
+	RUN) run $ARGS ;;
+	*) run $ARGS ;;
 esac;
