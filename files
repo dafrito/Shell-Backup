@@ -2,6 +2,7 @@
 
 function stage_files {
 	local files=${1?"File location or files must be specified"}
+	export PROJECT=$files
 	if echo $files | grep -q '/'; then
 		sync stage $files
 	else
