@@ -13,20 +13,26 @@ resolve_dir() {
 		root_dir=$current_dir
 	fi
 }
-resolve_dir
 
 function add_file {
 	for f; do
+		local orig_f=$f
 		debug "staging file: '$f' with root: '$root_dir'"
 		if echo $f | grep -qe '/$'; then
 			local has_trailing_slash=true
 		fi
-		f=`readlink -e $f`
+		f=`echo $f | sed -e "s%~%$HOME%g"`
+		f=`readlink -e $f` || die "readlink could not read $orig_f"
 		debug "physical location: " $f
-		if [ "$f" = "$root_dir" ]; then
-			f="."
+		if echo $f | grep -qe '^/'; then
+			true
 		else
-			f=${f:$((1+${#root_dir}))}
+			resolve_dir
+			if [ "$f" = "$root_dir" ]; then
+				f="."
+			else
+				f=${f:$((1+${#root_dir}))}
+			fi
 		fi
 		if [ $has_trailing_slash ]; then
 			f="$f/"
