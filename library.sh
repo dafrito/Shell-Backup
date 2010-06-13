@@ -98,18 +98,53 @@ function load_protocol {
 	debug "Loaded protocol: $protocol"
 }
 
+function load_group_with_exclusions {
+	local IFS='|'
+	set - $*
+	TARGET_NAME=$1
+	shift
+	EXCLUDED=$*
+}
+
+function populate_group {
+	TARGET_TYPE="group"
+	IFS=','
+	set - $1
+	for t; do
+		if [ $EXCLUDED ]; then 
+			if echo $EXCLUDED | sed 's/ /\n/g' | grep -qe "^$t$"; then
+				debug "Excluded $t"
+				continue
+			fi
+		fi
+		if [ -n "$GROUP" ]; then
+			GROUP="$GROUP,$t"
+		else
+			GROUP="$t"
+		fi
+	done
+}
+
+function load_target_name {
+	local IFS=':'
+	set - $*
+	TARGET_NAME=$1
+	shift
+	INLINE_TARGET_PATH="$*"
+}
+
 # load_target <name> <optional-target-args...>
 # corresponds to targets:
 # <target-name> <target-type> <target-args...>
 function load_target {
 	if echo $1 | grep -q ","; then
-		TARGET_TYPE="group"
-		IFS=','
-		set - $1
-		GROUP=$*
+		populate_group $*
 		return
 	fi
-	TARGET_NAME=$1
+	if echo $1 | grep -q '|'; then
+		load_group_with_exclusions $1
+	fi
+	load_target_name $1
 	shift
 	[ -n "$TARGET_NAME" ] || die "Target must be provided";
 	local data=`grep "^$TARGET_NAME[[:space:]]" "$CONFIG/targets"`
@@ -120,12 +155,13 @@ function load_target {
 	TARGET_TYPE=$1
 	shift
 	if [ "$TARGET_TYPE" = "group" ]; then
-		IFS=','
-		set - $*
-		GROUP=$*
+		populate_group $*
 	else
 		load_protocol $TARGET_TYPE
 		protocol_load_settings $* $args || error "Settings for target '$TARGET_NAME' failed to load";
+		if [ "$INLINE_TARGET_PATH" ]; then
+			TARGET="$TARGET/$INLINE_TARGET_PATH"
+		fi
 		[ "$DRY_RUN" ] && load_protocol dry
 	fi
 	return 0
