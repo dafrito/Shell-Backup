@@ -45,7 +45,9 @@ while [ "$1" ]; do
 		--tolerant) TOLERANT=true ;;
 		--clear) 
 			log "Clearing staged"
-			rm -f $SESSION/sync/staged ;;
+			rm -f $SESSION/sync/staged
+			exit
+			;;
 		-f) 
 			shift
 			if [ "$1" = "-" ]; then
