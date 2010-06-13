@@ -20,8 +20,9 @@ function push_to_target {
 	shift
 	local args="$*"
 	for target in `echo $targets | sed -e 's/,/ /g'`; do 
-		sync push $target $args || ERR=1
+		sync push --keep $target $args || ERR=1
 	done
+	sync stage --clear
 }
 
 function backup_by_name {
