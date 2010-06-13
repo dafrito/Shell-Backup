@@ -19,6 +19,7 @@ if [ "$cmd" ]; then
 		--check|--test) has_root_dir && exit ;;
 		--set)
 			check_for_staged
+			mkdir -p $SESSION/sync
 			echo $* >$SESSION/sync/root.dir
 			;;
 		--resolve)
