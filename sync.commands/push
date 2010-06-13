@@ -3,8 +3,7 @@
 [ "$SESSION" ] || die "sync push must be ran under a backup session"
 [ -s "$SESSION/sync/staged" ] || die "No files were staged"
 
-sync root-dir  --check || die "No root dir has been specified"
-cd `sync root-dir`
+sync root-dir --check && cd `sync root-dir`
 
 target=
 target_args=
