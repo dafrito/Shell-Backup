@@ -37,11 +37,18 @@ function protocol_load_global_args {
 
 function log_at_level {
 	if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" -ge "$1" ]; then
+		local level=$1
 		shift
-		if [ "$PROJECT" ]; then
-			echo "$PROJECT: $*"
+		if [ "$#" = 0 ]; then
+			while read l; do
+				log_at_level $level $l
+			done
 		else
-			echo "$*"
+			if [ "$PROJECT" ]; then
+				echo "$PROJECT: $*"
+			else
+				echo "$*"
+			fi
 		fi
 	fi
 }
