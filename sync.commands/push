@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup-settings/backup
+#!/home/dafrito/projects/backup/backup
 
 [ "$SESSION" ] || die "sync push must be ran under a backup session"
 [ -s "$SESSION/sync/staged" ] || die "No files were staged"

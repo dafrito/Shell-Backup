@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup-settings/backup
+#!/home/dafrito/projects/backup/backup
 
 load_target $*
 if [ "$GROUP" ]; then

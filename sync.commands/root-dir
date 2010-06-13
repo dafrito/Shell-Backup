@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup-settings/backup
+#!/home/dafrito/projects/backup/backup
 
 function get_root_dir {
 	cat $SESSION/sync/root.dir

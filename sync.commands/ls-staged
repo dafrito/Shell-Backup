@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup-settings/backup
+#!/home/dafrito/projects/backup/backup
 case "$1" in
 	-n) wc -l $SESSION/sync/staged | cut -d' ' -f1; exit ;;
 	-q|--quiet) [ -s $SESSION/sync/staged ]; exit ;;
