@@ -53,7 +53,7 @@ while [ "$1" ]; do
 				add_file `cat -`
 			else
 				[ -f $1 ] || die "Listfile does not exist: $1"
-				log "Adding files from file: $1"
+				log "Adding files from listfile: $1"
 				add_file $(<$1) 
 			fi ;;
 		*) 
