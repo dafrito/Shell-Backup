@@ -21,7 +21,13 @@ function protocol_load_settings {
 	shift 2
 	TARGET=`echo $1 | sed -re 's%[[:space:]]+%/%g'`
 	shift
-	protocol_load_global_args $*
+	while [ "$1" ]; do
+		case "$1" in
+			-*) protocol_load_global_args $* ;;
+			*) TARGET="$TARGET/$1"
+		esac
+		shift
+	done
 }
 
 function protocol_repo_exists {
