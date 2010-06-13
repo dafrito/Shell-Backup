@@ -17,12 +17,12 @@ resolve_dir
 
 function add_file {
 	for f; do
+		debug "staging file: '$f' with root: '$root_dir'"
 		if echo $f | grep -qe '/$'; then
 			local has_trailing_slash=true
 		fi
 		f=`readlink -e $f`
-		debug "File: " $f
-		debug "Root location: " $root_dir
+		debug "physical location: " $f
 		if [ "$f" = "$root_dir" ]; then
 			f="."
 		else
@@ -43,16 +43,22 @@ $f"
 while [ "$1" ]; do
 	case "$1" in
 		--tolerant) TOLERANT=true ;;
-		--clear) rm -f $SESSION/sync/staged ;;
+		--clear) 
+			log "Clearing staged"
+			rm -f $SESSION/sync/staged ;;
 		-f) 
 			shift
 			if [ "$1" = "-" ]; then
+				log "Adding files from stdin"
 				add_file `cat -`
 			else
 				[ -f $1 ] || die "Listfile does not exist: $1"
+				log "Adding files from file: $1"
 				add_file $(<$1) 
 			fi ;;
-		*) add_file $1 ;;
+		*) 
+			log "Added file explicitly: $1"
+			add_file $1 ;;
 	esac
 	shift
 done

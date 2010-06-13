@@ -13,7 +13,7 @@ sync_args=
 
 while [ "$1" ]; do
 	case "$1" in
-		--keep) KEEP=true ;;
+		--keep) debug "Keeping stage"; export KEEP=true ;;
 		-arg|--arg|-args|--args) shift; target_args="$target_args $1" ;; 
 		*) 
 			if [ ! -n "$target" ]; then

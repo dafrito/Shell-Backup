@@ -45,7 +45,7 @@ function backup_by_name {
 }
 
 function backup_by_target {
-	local target=$1
+	local target=${1?"No target was provided"}
 	IFS='
 '
 	for sync_data in `all_syncs`; do
