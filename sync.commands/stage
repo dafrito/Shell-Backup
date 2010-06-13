@@ -43,6 +43,7 @@ $f"
 while [ "$1" ]; do
 	case "$1" in
 		--tolerant) TOLERANT=true ;;
+		--clear) rm -f $SESSION/sync/staged ;;
 		-f) 
 			shift
 			if [ "$1" = "-" ]; then
