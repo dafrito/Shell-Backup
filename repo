@@ -39,7 +39,7 @@ function backup_by_name {
 	for repo_data in `all_repos | grep -Ee "$search"`; do
 		unset IFS
 		set - $repo_data
-		backup_one_repo $*
+		backup_one $*
 
 	done
 }
@@ -65,7 +65,7 @@ function backup_all {
 	for repo_data in `all_repos`; do
 		IFS=' 	'
 		set -- $repo_data
-		backup_one_repo $*
+		backup_one $*
 		IFS='
 '
 	done
