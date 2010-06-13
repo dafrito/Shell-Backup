@@ -47,6 +47,6 @@ fi
 
 sync_args=`echo "$sync_args" | sed -e "s%~/%$HOME/%g"`
 rsync -ih -rtz $sync_args `cat $SESSION/sync/staged | xargs echo` `protocol_canonicalize` || exit 1
-[ "$KEEP" ] || rm $SESSION/sync/staged
+[ "$KEEP" ] || sync stage --clear
 
 # vim: set filetype=sh :
