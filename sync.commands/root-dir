@@ -50,7 +50,7 @@ if [ "$cmd" ]; then
 else
 	[ -f $SESSION/sync/root.dir ] && 
 	cat $SESSION/sync/root.dir ||
-	die "root.dir does not exist or could not be read" ;;
+	die "No root directory has been specified"
 fi
 
 # vim: set filetype=sh :
