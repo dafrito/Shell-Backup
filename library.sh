@@ -143,8 +143,9 @@ function load_target {
 	fi
 	if echo $1 | grep -q '|'; then
 		load_group_with_exclusions $1
+	else
+		load_target_name $1
 	fi
-	load_target_name $1
 	shift
 	[ -n "$TARGET_NAME" ] || die "Target must be provided";
 	local data=`grep "^$TARGET_NAME[[:space:]]" "$CONFIG/targets"`
