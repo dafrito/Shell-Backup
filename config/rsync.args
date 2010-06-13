@@ -1,1 +1,1 @@
--R --exclude-from ~/.gitignore --exclude '.git/***' 
+-R -C
