@@ -128,6 +128,7 @@ function load_target {
 		protocol_load_settings $* $args || error "Settings for target '$TARGET_NAME' failed to load";
 		[ "$DRY_RUN" ] && load_protocol dry
 	fi
+	return 0
 }
 
 function check_and_lock {
