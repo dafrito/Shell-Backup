@@ -1,6 +1,6 @@
 #!/home/dafrito/projects/backup/backup
 
-load_target $*
+load_target $* "mirrors"
 if [ "$GROUP" ]; then
 	shift
 	for target in $GROUP; do
