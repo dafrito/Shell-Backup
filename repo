@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup/backup
+#!/usr/bin/env backup
 
 function backup_one {
 	local path=$1

@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/home/dafrito/projects/backup/backup
 
 backup files || ERR=1
 backup repo || ERR=1

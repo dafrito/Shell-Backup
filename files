@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup/backup
+#!/usr/bin/env backup
 
 function stage_files {
 	local files=${1?"File location or files must be specified"}

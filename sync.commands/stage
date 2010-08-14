@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup/backup
+#!/usr/bin/env backup
 
 touch $SESSION/sync/staged
 

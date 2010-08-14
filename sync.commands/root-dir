@@ -1,4 +1,4 @@
-#!/home/dafrito/projects/backup/backup
+#!/usr/bin/env backup
 
 function get_root_dir {
 	cat $SESSION/sync/root.dir
