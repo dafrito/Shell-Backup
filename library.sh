@@ -148,7 +148,7 @@ function load_target {
         local suffixed=`echo $1 | grep -E -o -e '[^+]+$'`
 		load_target_name `echo $1 | grep -E -o -e '^[^+]+'`
         shift
-        local args=$suffixed $*
+        local args="$suffixed $*"
 	else
 		load_target_name $1
         shift
