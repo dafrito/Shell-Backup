@@ -1,6 +1,6 @@
 #!/usr/bin/env backup
 
-load_target $* "mirrors"
+load_target $* "$USER/mirrors"
 if [ "$GROUP" ]; then
 	shift
 	for target in $GROUP; do
