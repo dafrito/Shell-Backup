@@ -117,6 +117,9 @@ function populate_group {
 				continue
 			fi
 		fi
+        if [ -n "$_suffixed" ]; then
+            t="$t+$_suffixed"
+        fi
 		if [ -n "$GROUP" ]; then
 			GROUP="$GROUP,$t"
 		else
@@ -162,7 +165,9 @@ function load_target {
 	TARGET_TYPE=$1
 	shift
 	if [ "$TARGET_TYPE" = "group" ]; then
+        _suffixed=$suffixed
 		populate_group $*
+        _suffixed=
 	else
 		load_protocol $TARGET_TYPE
 		protocol_load_settings $* $args $INLINE_TARGET_PATH || error "Settings for target '$TARGET_NAME' failed to load";
