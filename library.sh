@@ -143,17 +143,20 @@ function load_target {
 	fi
 	if echo $1 | grep -q '|'; then
 		load_group_with_exclusions $1
+        shift
 	elif echo $1 | grep -q '+'; then
         local suffixed=`echo $1 | grep -E -o -e '[^+]+$'`
 		load_target_name `echo $1 | grep -E -o -e '^[^+]+'`
+        shift
+        local args=$suffixed $*
 	else
 		load_target_name $1
+        shift
+        local args=$*
 	fi
-	shift
 	[ -n "$TARGET_NAME" ] || die "Target must be provided";
 	local data=`grep "^$TARGET_NAME[[:space:]]" "$CONFIG/targets"`
 	[ -n "$data" ] || die "Target does not exist: $TARGET_NAME" 
-	local args=$suffixed $*
 	set - $data
 	shift
 	TARGET_TYPE=$1
