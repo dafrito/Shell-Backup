@@ -12,6 +12,10 @@ function protocol_load_settings {
 	done
 }
 
+function protocol_requires_internet {
+	false
+}
+
 function protocol_repo_exists {
 	local path=`protocol_canonicalize "$*"`
 	[ -d "$path" ];

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+function protocol_load_settings {
+	true
+}
+
+function protocol_requires_internet {
+	false
+}
+
+function protocol_repo_exists {
+	true
+}
+
+function protocol_canonicalize {
+	echo $TARGET_NAME
+}
+
+function protocol_init_repo {
+	true
+}
+
+function protocol_push_repo {
+	true
+}

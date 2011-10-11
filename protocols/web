@@ -4,6 +4,10 @@ function protocol_load_settings {
 	true
 }
 
+function protocol_requires_internet {
+	true
+}
+
 function protocol_repo_exists {
 	git remote | grep -q "^$TARGET_NAME$"
 }

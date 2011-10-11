@@ -15,6 +15,10 @@ function load_target {
 	fi
 }
 
+function protocol_requires_internet {
+	true
+}
+
 function protocol_load_settings {
 	SSH_URL=${1?"URL must be given for $TARGET_NAME"};
 	SSH_USERNAME=${2?"username must be given for $TARGET_NAME"};

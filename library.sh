@@ -90,11 +90,18 @@ function all_repos {
     cat $CONFIG/repos | grep -v -e '^[#]' -e '^/\*'
 }
 
+function has_internet {
+	nmcli -t -f STATE dev | grep -q connected
+}
+
 function load_protocol {
 	[ -n "$1" ] || error "Protocol must be specified";
 	local protocol=$1
 	[ -f "$BACKUP_EXECUTABLE_DIR/protocols/$protocol" ] || error "Unrecognized protocol: $protocol";
 	source $BACKUP_EXECUTABLE_DIR/protocols/$protocol || error "Protocol failed to load: $protocol"
+	if protocol_requires_internet && ! has_internet; then
+		load_protocol noop
+	fi
 	debug "Loaded protocol: $protocol"
 }
 
