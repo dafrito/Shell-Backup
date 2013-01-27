@@ -42,9 +42,7 @@ function protocol_repo_exists {
 function protocol_init_repo {
 	ssh -l $SSH_USERNAME $SSH_URL "
 		set -e
-		mkdir -p $TARGET/$*
-		cd $TARGET/$*
-		git init --bare"
+		git init --bare $TARGET/$*"
 }
 
 function protocol_canonicalize {
